@@ -11,58 +11,6 @@
   text-decoration-line: underline;
 }
 
-/* What we build: a small cross-section beside each row from 1040px. On narrower screens the
-   rows stay text only. The second group reveals one step after the first. */
-.index-list > [data-reveal] + [data-reveal] { --reveal-delay: 60ms; }
-.index-list .thumb { display: none; }
-@media (min-width: 1040px) {
-  .index-list--thumbs a { grid-template-columns: 3rem minmax(0, 1fr) auto auto; }
-  .index-list--thumbs .thumb {
-    display: block;
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    align-self: center;
-    width: 72px;
-    height: 48px;
-    color: var(--slate);
-    background: var(--raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    transition: color var(--t-out) var(--ease);
-  }
-  .index-list--thumbs .arrow { grid-column: 4; grid-row: 1 / span 2; }
-  .index-list--thumbs a:hover .thumb,
-  .index-list--thumbs a:focus-visible .thumb { color: var(--ink); transition-duration: var(--t-in); }
-}
-
-/* How a project runs, on the dark band: a line drawing per stage. On phones the drawing sits
-   to the right of the stage text; from 900px it sits above the heading in each column. */
-.section--night .section-head > p { color: var(--on-night); }
-.section--night .stages h3::before { color: var(--on-night); }
-.stages--icons > li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: var(--s2);
-  align-content: start;
-}
-.stages--icons > li > * { grid-column: 1; }
-.stages--icons .stage-icon {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  width: 40px;
-  height: 40px;
-}
-@media (min-width: 900px) {
-  .stages--icons > li { display: block; }
-  .stages--icons .stage-icon {
-    display: block;
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--s2);
-  }
-}
-
-/* Questions: heading and intro beside the questions from 960px. */
+/* Straight answers: heading and intro beside the questions from 960px. */
 .split > .section-head { margin-bottom: 0; }
 .qa address { margin-top: .75em; }
-

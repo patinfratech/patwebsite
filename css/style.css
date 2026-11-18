@@ -223,8 +223,7 @@ a:hover {
 .section--night .lead,
 .section--night .label,
 .section--night .muted,
-.section--night .prose p,
-.section--night .section-head > p { color: var(--on-night); }
+.section--night .prose p { color: var(--on-night); }
 .section--night a:not(.btn) { color: var(--on-night); }
 .section--night :focus-visible { outline-color: var(--on-night); }
 .section--night ::selection { background: var(--on-night); color: var(--ink); }
@@ -500,20 +499,18 @@ a:hover {
 }
 
 /* ---------- home hero (display H1 + plate) ---------- */
-/* v2: a short bottom so the next section's ▼ rule and H2 show above the fold (no false floor). */
-.hero { padding-block: clamp(40px, 6vw, 88px) clamp(40px, 3.5vw, 52px); }
+.hero { padding-block: clamp(40px, 6vw, 88px) var(--section); }
 .hero + .section:not(.section--night) { padding-top: 0; }
 .hero-grid { display: grid; gap: var(--s5); }
 .hero .lead { margin-top: var(--s3); }
 .hero .actions { margin-top: var(--s4); }
 .hero .facts { margin-top: var(--s4); }
 @media (min-width: 960px) {
-  .hero { padding-top: clamp(40px, 4vw, 64px); }
   .hero-grid {
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
     gap: var(--s6);
     align-items: center;
-    min-height: calc(60svh - var(--header-h));
+    min-height: calc(70svh - var(--header-h));
   }
   /* In the 7/12 column the spec's 6.5rem cap would set one word per line; cap lower so the
      H1 sets in four lines at 1440 and the 4:5 plate keeps 5/12 of the grid. */
@@ -624,35 +621,25 @@ a:hover {
 @keyframes nav-fallback { to { visibility: visible; opacity: 1; transform: none; } }
 
 /* ---------- stages (5 steps) ---------- */
-/* --stage-line: the connector and dots; --stage-bg: the dot fill (the band's own ground). */
-.stages {
-  --stage-line: var(--ink);
-  --stage-bg: var(--ground);
-  counter-reset: stage;
-  display: grid;
-  position: relative;
-}
+.stages { counter-reset: stage; display: grid; }
 .stages > li {
   counter-increment: stage;
   position: relative;
   padding: 0 0 var(--s4) var(--s4);
-  border-left: 1px solid var(--stage-line);
+  border-left: 1px solid var(--ink);
 }
 .stages > li:last-child { padding-bottom: 0; border-left-color: transparent; }
 .stages > li::before {
   content: "";
   position: absolute;
-  z-index: 1;
   left: -5px;
   top: 4px;
   width: 9px;
   height: 9px;
-  border: 1px solid var(--stage-line);
+  border: 1px solid var(--ink);
   border-radius: 50%;
-  background: var(--stage-bg);
+  background: var(--ground);
 }
-.section--night .stages { --stage-line: var(--on-night); --stage-bg: var(--night); }
-.section--night .stages h3::before { color: var(--on-night); }
 .stages h3::before {
   content: counter(stage);
   display: block;
@@ -679,7 +666,7 @@ a:hover {
   .stages > li:last-child {
     padding: var(--s4) var(--s3) 0 0;
     border-left: 0;
-    border-top: 1px solid var(--stage-line);
+    border-top: 1px solid var(--ink);
   }
   .stages > li::before { left: 0; top: -5px; }
 }
@@ -1023,15 +1010,6 @@ html.js-early:not(.js) .copy-btn { visibility: hidden; }
   line-height: 1.08;
   max-width: 22ch;
 }
-/* Close: a small heading names the action; the closing line keeps the H2 scale. */
-.close p.close-line {
-  margin-top: var(--s2);
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-stretch: 87.5%;
-  letter-spacing: -.01em;
-  text-wrap: balance;
-}
 .close .lead { margin-top: var(--s3); }
 .close .actions { margin-top: var(--s4); }
 .close-email { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; overflow-wrap: anywhere; }
@@ -1077,197 +1055,6 @@ html.js-early:not(.js) .copy-btn { visibility: hidden; }
 /* ---------- 404 ---------- */
 .not-found { min-height: 50svh; }
 
-/* ==========================================================================
-   v2: orientation and explanation motion (research/v2-apply.md §2).
-   Only transform and opacity move. Without JS, without support or under reduced motion
-   everything below rests in its complete, visible state.
-   ========================================================================== */
-
-/* ---------- 1. reveal: [data-reveal] below the first screen ---------- */
-/* main.js marks blocks already in view as .is-in, then sets html.reveal-ready, so nothing that is
-   on screen at load is ever hidden. Phones and reduced motion never hide anything. */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  html.reveal-ready [data-reveal]:not(.is-in) {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  html.reveal-ready [data-reveal].is-in {
-    transition:
-      opacity 260ms var(--ease),
-      transform 260ms var(--ease);
-    /* Sibling steps of 60ms; capped at three steps. */
-    transition-delay: min(var(--reveal-delay, 0ms), 180ms);
-  }
-  /* Keyboard focus inside a block that has not revealed yet shows it at once. */
-  html.reveal-ready [data-reveal]:focus-within { opacity: 1; transform: none; }
-}
-
-/* ---------- 2. scroll progress under the header (no JS, no markup) ---------- */
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .site-header::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 2px;
-      background: var(--mark);
-      transform: scaleX(0);
-      transform-origin: 0 50%;
-      pointer-events: none;
-      animation: scroll-progress auto linear both;
-      animation-timeline: scroll(root block);
-    }
-  }
-}
-@keyframes scroll-progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* ---------- 3. stage line fill ---------- */
-/* The li borders stay as a faint track and a 1px line fills over them as the list scrolls through.
-   Phones (vertical): each stage's segment fills as that stage crosses the screen.
-   From 900px (horizontal): one line across the row fills as the list crosses the screen.
-   Without support or under reduced motion the li borders draw the full line, as before. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .stages { --stage-track: var(--line); view-timeline: --stages block; }
-    .section--night .stages { --stage-track: rgb(236 232 225 / .3); }
-    .stages > li:not(:last-child) { border-left-color: var(--stage-track); view-timeline: --stage block; }
-    .stages > li:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      left: -1px;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: var(--stage-line);
-      transform-origin: 50% 0;
-      pointer-events: none;
-      animation: stage-fill-y auto linear both;
-      animation-timeline: --stage;
-      animation-range: entry 10% cover 50%;
-    }
-  }
-  @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-    .stages > li,
-    .stages > li:last-child { border-top-color: var(--stage-track); }
-    .stages > li:not(:last-child)::after { content: none; }
-    .stages::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: 1px;
-      background: var(--stage-line);
-      transform-origin: 0 50%;
-      pointer-events: none;
-      animation: stage-fill-x auto linear both;
-      animation-timeline: --stages;
-      animation-range: entry 10% cover 50%;
-    }
-  }
-}
-@keyframes stage-fill-y {
-  from { transform: scaleY(0); }
-  to { transform: scaleY(1); }
-}
-@keyframes stage-fill-x {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* ---------- 4. drawing annotations ---------- */
-/* <g class="note" tabindex="0" role="button" aria-label="…" data-note="…"> inside a drawing.
-   main.js adds a transparent .note-hit circle (at least 24px across on screen) and one shared
-   tooltip, div.drawing-note. */
-.note { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.note:focus,
-.note:focus-visible { outline: none; }
-.note .note-hit {
-  fill: transparent;
-  stroke: none;
-  pointer-events: all;
-}
-.note:hover .note-hit {
-  stroke: var(--mark);
-  stroke-width: 1.5;
-}
-.note:focus-visible .note-hit,
-.note.is-active .note-hit {
-  stroke: var(--ink);
-  stroke-width: 2;
-}
-
-.drawing-note {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 40;
-  max-width: 20rem;
-  padding: 8px 12px;
-  background: var(--raised);
-  color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: 0 6px 18px rgb(22 24 26 / .12);
-  font: 400 .875rem/1.45 var(--font-text);
-  text-wrap: pretty;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(4px);
-  transition:
-    opacity var(--t-out) var(--ease),
-    transform var(--t-out) var(--ease),
-    visibility 0s linear var(--t-out);
-}
-.drawing-note[data-side="below"] { transform: translateY(-4px); }
-.drawing-note.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition:
-    opacity 180ms var(--ease),
-    transform 180ms var(--ease),
-    visibility 0s;
-}
-
-/* ---------- 5. mobile CTA bar (injected by main.js, not on contact.html) ---------- */
-.mobile-cta { display: none; }
-@media (max-width: 767.98px) {
-  .mobile-cta.btn {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 45;
-    display: flex;
-    width: 100%;
-    min-height: 56px;
-    padding: 12px max(var(--gutter), env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
-    border-radius: 0;
-    box-shadow: 0 -1px 0 rgb(22 24 26 / .2);
-    transform: translateY(100%);
-    visibility: hidden;
-    transition:
-      transform var(--t-out) var(--ease),
-      visibility 0s linear var(--t-out);
-  }
-  .mobile-cta.btn.is-shown {
-    transform: none;
-    visibility: visible;
-    transition:
-      transform 200ms var(--ease),
-      visibility 0s;
-  }
-  .mobile-cta.btn.is-shown:active { transform: translateY(1px); }
-  /* While the bar shows, focus scrolling keeps the focused element clear of it. */
-  html.has-mobile-cta { scroll-padding-bottom: calc(56px + env(safe-area-inset-bottom) + var(--s2)); }
-}
-
 /* ---------- reduced motion and print ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -1278,16 +1065,9 @@ html.js-early:not(.js) .copy-btn { visibility: hidden; }
   }
   html.js .matrix[data-fill]:not(.is-filled) :is(.dot, .ring) { transform: none; }
   html.js-early:not(.js) [data-draw="hero"] { opacity: 1; animation: none; }
-  [data-reveal] { opacity: 1 !important; transform: none !important; }
-  .drawing-note,
-  .drawing-note[data-side="below"],
-  .drawing-note.is-open { transform: none; transition: none !important; }
-  .mobile-cta.btn,
-  .mobile-cta.btn.is-shown { transition: none !important; }
 }
 @media print {
-  .site-header, .nav-toggle, .chips, .copy-btn, .skip, .mobile-cta, .drawing-note { display: none !important; }
-  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .site-header, .nav-toggle, .chips, .copy-btn, .skip { display: none !important; }
   html.js .matrix[data-fill] :is(.dot, .ring) { transform: none !important; }
   body { background: #FFFFFF; }
 }
