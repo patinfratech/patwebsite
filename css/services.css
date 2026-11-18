@@ -1,0 +1,103 @@
+/* services.html only. Tokens from style.css; no new colours. */
+
+/* ---------- service groups and rows ---------- */
+.svc-groups { display: grid; gap: var(--s7); min-width: 0; }
+.svc-group > h2 { margin-bottom: var(--s2); }
+
+.svc {
+  display: grid;
+  gap: var(--s4);
+  padding-block: var(--s5);
+  border-top: 1px solid var(--line);
+}
+.svc-group > h2 + .svc { border-top-color: var(--ink); }
+.svc:last-child { padding-bottom: 0; }
+
+.svc-text { display: grid; gap: var(--s2); align-content: start; justify-items: start; min-width: 0; }
+.svc h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-stretch: 87.5%;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.svc-text > p { max-width: 52ch; }
+.svc-text > .btn { margin-top: var(--s1); }
+
+/* Scope ticks: ruled list with a drawn tick (non-text mark). */
+.ticks { width: 100%; max-width: 52ch; border-bottom: 1px solid var(--line); }
+.ticks li {
+  position: relative;
+  padding: 10px 0 10px 28px;
+  border-top: 1px solid var(--line);
+}
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: calc(10px + .45em);
+  width: 11px;
+  height: 6px;
+  border-left: 1.5px solid var(--mark);
+  border-bottom: 1.5px solid var(--mark);
+  transform: rotate(-45deg);
+}
+
+.svc .plate { width: 100%; max-width: 560px; }
+
+/* Two columns once the rows column is wide enough for text beside a readable plate. */
+@media (min-width: 1100px) {
+  .svc {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: var(--s5);
+    align-items: start;
+  }
+  .svc .plate { max-width: none; }
+}
+
+/* Rows without a drawing: text, scope list, then the button on phones;
+   from 600px the scope list takes the plate's column. */
+.svc--plain {
+  grid-template-areas: "text" "ticks" "btn";
+  gap: var(--s3);
+}
+.svc--plain > .svc-text { grid-area: text; }
+.svc--plain > .ticks { grid-area: ticks; }
+.svc--plain > .svc-btn { grid-area: btn; justify-self: start; }
+@media (min-width: 600px) {
+  .svc--plain {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas: "text ticks" "btn ticks";
+    grid-template-rows: auto 1fr;
+    column-gap: var(--s5);
+    row-gap: var(--s3);
+    align-items: start;
+  }
+  .svc--plain > .ticks { margin-top: 6px; }
+}
+@media (min-width: 1100px) {
+  .svc--plain { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+}
+
+/* ---------- contract types ---------- */
+.contracts { display: grid; gap: var(--s4); }
+@media (min-width: 900px) {
+  .contracts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); }
+}
+.contracts > li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--ink);
+}
+.contracts h3 { font-size: 1.25rem; }
+.contracts p { max-width: 46ch; }
+.contracts p.label { margin-top: auto; padding-top: var(--s1); }
+
+/* ---------- stages: link inside the intro ---------- */
+.section-head a { font-weight: 500; }
+
+/* Close-block email: a 44px tap target (it sits outside running text). */

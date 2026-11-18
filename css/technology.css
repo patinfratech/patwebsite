@@ -1,0 +1,74 @@
+/* technology.html only. Tokens from style.css; no new colours. */
+
+/* ---------- matrix ---------- */
+.matrix-hint { margin-bottom: var(--s1); }
+@media (min-width: 900px) { .matrix-hint { display: none; } }
+.matrix:focus-visible { outline-offset: 4px; }
+.matrix-key { align-items: center; }
+.matrix-key > span { display: inline-flex; align-items: center; }
+.key-dash { display: inline-block; width: 10px; margin-right: 8px; text-align: center; color: var(--slate); }
+
+/* ---------- what each method is for ---------- */
+.methods-h { margin-top: var(--s6); margin-bottom: var(--s3); }
+.methods { display: grid; gap: 0 var(--s5); border-bottom: 1px solid var(--line); }
+@media (min-width: 768px) { .methods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .methods { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.methods > div {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: var(--s2) 0 var(--s3);
+  border-top: 1px solid var(--line);
+}
+.methods dt { font-weight: 500; }
+.methods .tag {
+  margin-left: 8px;
+  font: 500 .875rem/1 var(--font-text);
+  color: var(--slate);
+  white-space: nowrap;
+}
+.methods dd { margin: 0; max-width: 46ch; }
+
+/* ---------- where AI is used ---------- */
+.ai-line {
+  margin-top: var(--s3);
+  padding-top: var(--s2);
+  max-width: 18ch;
+  border-top: 1px solid var(--ink);
+  font: 600 clamp(1.375rem, 1.1rem + 1vw, 1.75rem)/1.2 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+}
+.ai-split { display: grid; gap: var(--s4); }
+@media (min-width: 640px) { .ai-split { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ai-split h3 { margin-bottom: var(--s1); }
+.ai-list { border-bottom: 1px solid var(--line); }
+.ai-list li { padding: 10px 0; border-top: 1px solid var(--line); }
+.ai-note { grid-column: 1 / -1; max-width: 60ch; }
+
+/* ---------- roadmap + point-cloud plate ---------- */
+.roadmap { display: grid; gap: var(--s5); }
+@media (min-width: 960px) {
+  .roadmap { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s6); align-items: start; }
+}
+.roadmap-intro { margin-top: var(--s3); max-width: 52ch; }
+.roadmap-list { margin-top: var(--s4); border-bottom: 1px solid var(--line); max-width: 52ch; }
+.roadmap-list li {
+  position: relative;
+  padding: 12px 0 12px 24px;
+  border-top: 1px solid var(--line);
+}
+/* Outline ring, the same "planned" marker as the table. */
+.roadmap-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc(12px + .5em);
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--mark);
+  border-radius: 50%;
+}
+.roadmap .plate { max-width: 720px; }
+
