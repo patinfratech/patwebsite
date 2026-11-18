@@ -1,0 +1,32 @@
+/* About page only. Tokens from style.css; no new colours. */
+
+/* The vision on the night band: the page's one typographic moment. */
+.aim-line {
+  margin-top: var(--s3);
+  max-width: 22ch; /* four to five lines at 1440 instead of six */
+}
+.aim-mission {
+  margin-top: var(--s5);
+  max-width: 52ch;
+}
+
+/* Four working rules: a 2 x 2 set of ruled entries, not cards. */
+.rules {
+  display: grid;
+  gap: var(--s4);
+}
+@media (min-width: 768px) {
+  .rules {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s5) var(--s6);
+  }
+}
+.rules > li {
+  display: grid;
+  gap: var(--s1);
+  align-content: start;
+  padding-top: var(--s2);
+  border-top: 1px solid var(--ink);
+}
+.rules h3 { max-width: 30ch; text-wrap: balance; }
+.rules p { max-width: 48ch; color: var(--slate); }

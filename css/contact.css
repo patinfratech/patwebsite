@@ -1,0 +1,49 @@
+/* Contact page only. Tokens from style.css; no new colours. */
+
+/* Contact methods sit in the hero, so they are the first thing on the page. */
+.page-hero .contact-methods { margin-top: var(--s5); max-width: 62rem; }
+.method-name { font-weight: 500; }
+
+/* Brief form beside "What helps us quote" from 1040px; stacked below. */
+.brief-grid { display: grid; gap: var(--s6); }
+@media (min-width: 1040px) {
+  .brief-grid {
+    grid-template-columns: minmax(0, 46rem) minmax(0, 1fr);
+    gap: var(--s6);
+    align-items: start;
+  }
+}
+@media (max-width: 1039px) {
+  .quote-help { order: -1; }
+}
+.brief-main { min-width: 0; }
+
+/* The address beside the send button, with its own Copy button. */
+.form-address { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.form-address a { font-weight: 500; overflow-wrap: anywhere; }
+
+.quote-help {
+  padding: var(--s4);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+@media (min-width: 1040px) {
+  .quote-help { position: sticky; top: calc(var(--header-h) + var(--s4)); }
+}
+.quote-help h2 { font-size: clamp(1.5rem, 2.4vw, 1.875rem); }
+.quote-help ul { display: grid; margin-top: var(--s3); border-bottom: 1px solid var(--line); }
+.quote-help li {
+  display: grid;
+  gap: 4px;
+  padding: var(--s2) 0;
+  border-top: 1px solid var(--line);
+}
+.quote-help h3 { font-size: 1.0625rem; }
+.quote-help p { color: var(--slate); }
+
+/* Three steps instead of five: same component, three columns from 900px. */
+@media (min-width: 900px) {
+  .stages--three { grid-template-columns: repeat(3, 1fr); }
+  .stages--three > li { padding-right: var(--s5); }
+}
