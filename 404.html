@@ -34,14 +34,14 @@
 <meta property="og:locale" content="en_IN">
 <meta property="og:title" content="Page not found | PAT Infratech">
 <meta property="og:description" content="There is no page at this address on the PAT Infratech website. Links to every page are listed here.">
-<meta name="theme-color" content="#16181A">
-<link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
+<meta name="theme-color" content="#F4F2EC">
+<link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600&amp;family=Instrument+Sans:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="css/style.css?v=1">
+<link rel="stylesheet" href="css/style.css?v=3">
 <script>document.documentElement.classList.add("js-early")</script>
-<script src="js/main.js?v=1" defer></script>
+<script src="js/main.js?v=3" defer></script>
 <meta name="robots" content="noindex">
 </head>
 <body>
@@ -79,10 +79,9 @@
   </div>
 </header>
 <main id="main">
-  <section class="page-hero not-found">
-    <div class="wrap">
-      <div class="datum" aria-hidden="true"></div>
-      <h1>Page not found</h1>
+  <section class="v-hero v-hero--plain" aria-labelledby="hero-h">
+    <div class="wrap v-hero__copy">
+      <h1 class="v-hero__title" id="hero-h">Page not found</h1>
       <p class="lead">There is no page at this address. It may have been typed wrongly or moved. Every page on the site is listed below.</p>
       <div class="actions">
         <a class="btn btn--primary" href="contact.html">Send a project brief</a>
@@ -90,31 +89,55 @@
       </div>
     </div>
   </section>
-  <section class="section">
+  <section class="v-sec" aria-labelledby="pages-h">
     <div class="wrap">
-      <div class="index-list">
-        <div>
-          <h2>Pages on this site</h2>
-          <ol>
-          <li><a href="index.html"><span class="num">1</span><span class="name">Home</span><span class="desc">What we build and how a project runs</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></li>
-          <li><a href="about.html"><span class="num">2</span><span class="name">About</span><span class="desc">Why the company was set up, and its particulars</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></li>
-          <li><a href="services.html"><span class="num">3</span><span class="name">Services</span><span class="desc">Buildings and infrastructure, with the scope of each</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></li>
-          <li><a href="technology.html"><span class="num">4</span><span class="name">Technology</span><span class="desc">The methods we plan to use, stage by stage</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></li>
-          <li><a href="contact.html"><span class="num">5</span><span class="name">Contact</span><span class="desc">Email, registered office and the project brief form</span><svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a></li>
-          </ol>
-        </div>
+      <div class="v-head">
+        <h2 class="v-title" id="pages-h">Pages on this site</h2>
       </div>
+      <ul class="v-tiles v-tiles--3">
+        <li>
+          <a class="v-tile" href="index.html">
+            <span class="v-tile__name">Home <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+            <span class="v-tile__line">What we build and how a project runs</span>
+          </a>
+        </li>
+        <li>
+          <a class="v-tile" href="about.html">
+            <span class="v-tile__name">About <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+            <span class="v-tile__line">Why the company was set up, and its particulars</span>
+          </a>
+        </li>
+        <li>
+          <a class="v-tile" href="services.html">
+            <span class="v-tile__name">Services <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+            <span class="v-tile__line">Buildings and infrastructure, with the scope of each</span>
+          </a>
+        </li>
+        <li>
+          <a class="v-tile" href="technology.html">
+            <span class="v-tile__name">Technology <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+            <span class="v-tile__line">The methods we plan to use, stage by stage</span>
+          </a>
+        </li>
+        <li>
+          <a class="v-tile" href="contact.html">
+            <span class="v-tile__name">Contact <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></span>
+            <span class="v-tile__line">Email, registered office and the project brief form</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </section>
 </main>
 <footer class="site-footer">
   <div class="wrap">
+    <p class="footer-wordmark" aria-hidden="true">PAT Infratech</p>
     <div class="footer-grid">
       <div class="footer-col">
         <p class="footer-name">PAT Infratech (OPC) Private Limited</p>
         <p class="muted">Construction and infrastructure from Namakkal District, Tamil Nadu.</p>
-        <!-- CIN: add when supplied, e.g. <p class="muted">CIN …</p> -->
-        <!-- GSTIN: add when supplied, e.g. <p class="muted">GSTIN …</p> -->
+        <!-- CIN: add when supplied, e.g. <p class="muted">CIN ...</p> -->
+        <!-- GSTIN: add when supplied, e.g. <p class="muted">GSTIN ...</p> -->
       </div>
       <div class="footer-col">
         <h2 class="label">Registered office</h2>

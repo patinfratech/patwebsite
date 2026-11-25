@@ -12,15 +12,15 @@
 <meta property="og:title" content="Contact | PAT Infratech">
 <meta property="og:description" content="Email PAT Infratech or send a project brief. Registered office in Kumarapalayam Taluk, Namakkal District, Tamil Nadu 637304, India.">
 <meta property="og:url" content="https://patinfratech.com/contact.html">
-<meta name="theme-color" content="#16181A">
-<link rel="icon" href="assets/favicon.svg?v=1" type="image/svg+xml">
+<meta name="theme-color" content="#F4F2EC">
+<link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,600&amp;family=Instrument+Sans:wght@400;500&amp;display=swap">
-<link rel="stylesheet" href="css/style.css?v=1">
+<link rel="stylesheet" href="css/style.css?v=3">
 <script>document.documentElement.classList.add("js-early")</script>
-<script src="js/main.js?v=1" defer></script>
-<link rel="stylesheet" href="css/contact.css?v=1">
+<script src="js/main.js?v=3" defer></script>
+<link rel="stylesheet" href="css/contact.css?v=3">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -57,148 +57,206 @@
   </div>
 </header>
 <main id="main">
-  <section class="page-hero">
-    <div class="wrap">
-      <h1>Contact PAT Infratech</h1>
-      <p class="lead">Write to us by email, or fill in the project brief below and send it from your own email app. Both reach the same inbox.</p>
-      <div class="contact-methods">
-        <div class="method">
-          <h2 class="label">Email</h2>
-          <p><a class="email" href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a></p>
-          <p class="method-actions">
-            <button type="button" class="copy-btn" data-copy="patinfratechkas@gmail.com">Copy address</button>
-            <span class="copy-status" role="status"></span>
-          </p>
-        </div>
-        <div class="method">
-          <h2 class="label">Registered office</h2>
-          <p class="method-name">PAT Infratech (OPC) Private Limited</p>
-          <address>6/99, Chinna Anangur, Anangur (Post),<br>Kumarapalayam (Taluk), Namakkal (District),<br>Tamil Nadu &ndash; 637304, India</address>
-        </div>
-      </div>
+
+  <section class="v-hero c-hero" aria-labelledby="hero-h">
+    <div class="wrap c-head">
+      <p class="v-eyebrow">Contact PAT Infratech</p>
+      <h1 class="v-hero__title c-title" id="hero-h">Send a project brief or an email</h1>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="brief-h">
-    <div class="wrap">
-      <div class="datum" aria-hidden="true"></div>
-      <div class="brief-grid">
-        <div class="brief-main">
-          <div class="section-head">
-            <h2 id="brief-h">Project brief</h2>
-            <p>Your name and a few lines about the project are enough to start. Everything marked optional can wait.</p>
+  <section class="v-sec c-contact" id="brief" aria-label="Contact routes and project brief">
+    <div class="wrap c-grid">
+      <div class="c-side">
+        <p class="lead">Your name, the site location and a few lines about the work are enough. The form opens your own email app; nothing is sent until you press send there.</p>
+        <div class="contact-methods c-routes">
+          <div class="method">
+            <h2 class="label">Email</h2>
+            <p><a class="email" href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a></p>
+            <p class="method-actions">
+              <button type="button" class="copy-btn" data-copy="patinfratechkas@gmail.com">Copy address</button>
+              <span class="copy-status" role="status"></span>
+            </p>
           </div>
-          <form id="enquiry" class="form" action="mailto:patinfratechkas@gmail.com" method="post" enctype="text/plain">
-            <div class="error-summary" role="group" aria-labelledby="enquiry-errors-title" hidden tabindex="-1"><h2 id="enquiry-errors-title">There is a problem</h2><ul></ul></div>
-
-            <div class="field">
-              <label for="f-name">Your name</label>
-              <input id="f-name" name="name" type="text" autocomplete="name" required data-error="Enter your name.">
-            </div>
-            <div class="field">
-              <label for="f-org">Company or organisation <span class="opt">(optional)</span></label>
-              <input id="f-org" name="organisation" type="text" autocomplete="organization">
-            </div>
-            <div class="field">
-              <label for="f-phone">Phone <span class="opt">(optional)</span></label>
-              <input id="f-phone" name="phone" type="tel" autocomplete="tel">
-            </div>
-            <div class="field">
-              <label for="f-type">Type of project <span class="opt">(optional)</span></label>
-              <select id="f-type" name="type">
-                <option value="">Select one</option>
-                <option value="industrial">Industrial buildings</option>
-                <option value="datacentres">Data centres</option>
-                <option value="residential">Residential</option>
-                <option value="commercial">Commercial</option>
-                <option value="development">Land and site development</option>
-                <option value="roads">Roads and highways</option>
-                <option value="bridges">Bridges</option>
-                <option value="tunnels">Tunnels and underground works</option>
-                <option value="civil">General civil works</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="field field--wide">
-              <label for="f-loc">Project location <span class="opt">(optional)</span></label>
-              <input id="f-loc" name="location" type="text" aria-describedby="f-loc-hint">
-              <p class="hint" id="f-loc-hint">Village or town and taluk, or a survey number.</p>
-            </div>
-            <div class="field field--wide">
-              <label for="f-msg">Project description</label>
-              <textarea id="f-msg" name="message" rows="6" required data-error="Describe the project in a sentence or two." aria-describedby="f-msg-hint"></textarea>
-              <p class="hint" id="f-msg-hint">What it is, roughly how big, and what you already have, such as drawings or a plot survey.</p>
-            </div>
-
-            <div class="form-foot">
-              <button class="btn btn--primary" type="submit" name="send" value="email">Send by email</button>
-              <button class="btn btn--ghost" type="submit" name="send" value="whatsapp" hidden>Send on WhatsApp</button>
-              <p class="form-note" id="form-helper">This opens your own email app with your details filled in. Nothing is sent until you press send there.</p>
-              <p class="form-note form-address"><span>Your brief goes to <a href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a>.</span> <button type="button" class="copy-btn" data-copy="patinfratechkas@gmail.com">Copy address</button> <span class="copy-status" role="status"></span></p>
-              <p id="form-status" class="form-note" role="status"></p>
-            </div>
-          </form>
+          <div class="method">
+            <h2 class="label">Registered office</h2>
+            <p class="method-name">PAT Infratech (OPC) Private Limited</p>
+            <address>6/99, Chinna Anangur, Anangur (Post),<br>Kumarapalayam (Taluk), Namakkal (District),<br>Tamil Nadu &ndash; 637304, India</address>
+          </div>
         </div>
-
-        <aside class="quote-help" aria-labelledby="help-h">
-          <h2 id="help-h">What helps us quote</h2>
+        <!-- Call and WhatsApp: main.js adds them here once PHONE_NUMBER or WHATSAPP_NUMBER is set. -->
+        <div class="actions c-quick" data-contact-actions></div>
+        <nav class="v-jump c-jump" aria-label="On this page">
           <ul>
-            <li>
-              <h3>Drawings</h3>
-              <p>Plans or sketches with dimensions, in any format. Attach them to the email when it opens.</p>
-            </li>
-            <li>
-              <h3>Site location</h3>
-              <p>The village and taluk, a survey number or a map pin, and how a lorry reaches the site.</p>
-            </li>
-            <li>
-              <h3>Target date</h3>
-              <p>When you want work to start, and when you need to move in or open.</p>
-            </li>
-            <li>
-              <h3>Budget range</h3>
-              <p>A range is enough. It tells us whether to price one full scope or a few options.</p>
-            </li>
+            <li><a href="#help-h">What helps us quote</a></li>
+            <li><a href="#after-h">What happens after you send it</a></li>
+            <li><a href="#qa-h">Common questions</a></li>
           </ul>
-        </aside>
+        </nav>
+      </div>
+
+      <div class="c-brief v-panel">
+        <div class="c-brief__head">
+          <h2 class="v-item__name" id="brief-h">Project brief</h2>
+          <p>Fields marked optional can wait.</p>
+        </div>
+        <form id="enquiry" class="form" action="mailto:patinfratechkas@gmail.com" method="post" enctype="text/plain">
+          <div class="error-summary" role="group" aria-labelledby="enquiry-errors-title" hidden tabindex="-1"><h2 id="enquiry-errors-title">Check the fields marked below</h2><ul></ul></div>
+
+          <div class="field">
+            <label for="f-name">Your name</label>
+            <input id="f-name" name="name" type="text" autocomplete="name" required data-error="Enter your name, so we know who to reply to.">
+          </div>
+          <div class="field">
+            <label for="f-org">Company or organisation <span class="opt">(optional)</span></label>
+            <input id="f-org" name="organisation" type="text" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-phone">Phone <span class="opt">(optional)</span></label>
+            <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="f-type">Type of project <span class="opt">(optional)</span></label>
+            <select id="f-type" name="type">
+              <option value="">Select one</option>
+              <option value="industrial">Industrial buildings</option>
+              <option value="datacentres">Data centres</option>
+              <option value="residential">Residential</option>
+              <option value="commercial">Commercial</option>
+              <option value="development">Land and site development</option>
+              <option value="roads">Roads and highways</option>
+              <option value="bridges">Bridges</option>
+              <option value="tunnels">Tunnels and underground works</option>
+              <option value="civil">General civil works</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field field--wide">
+            <label for="f-loc">Project location <span class="opt">(optional)</span></label>
+            <input id="f-loc" name="location" type="text" aria-describedby="f-loc-hint">
+            <p class="hint" id="f-loc-hint">Village or town and taluk, or a survey number.</p>
+          </div>
+          <div class="field field--wide">
+            <label for="f-msg">Project description</label>
+            <textarea id="f-msg" name="message" rows="6" required data-error="Add a few lines about the project: what it is and roughly how big." aria-describedby="f-msg-hint"></textarea>
+            <p class="hint" id="f-msg-hint">What it is, roughly how big, and what you already have, such as drawings or a plot survey.</p>
+          </div>
+
+          <div class="form-foot">
+            <button class="btn btn--primary" type="submit" name="send" value="email">Send by email</button>
+            <button class="btn btn--ghost" type="submit" name="send" value="whatsapp" hidden>Send on WhatsApp</button>
+            <p class="form-note" id="form-helper">This opens your own email app with your details filled in. Nothing is sent until you press send there.</p>
+            <p class="form-note form-address"><span>Your brief goes to <a href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a>.</span> <button type="button" class="copy-btn" data-copy="patinfratechkas@gmail.com">Copy address</button> <span class="copy-status" role="status"></span></p>
+            <p id="form-status" class="form-note" role="status"></p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="after-h">
-    <div class="wrap" data-reveal>
-      <div class="datum" aria-hidden="true"></div>
-      <div class="section-head">
-        <h2 id="after-h">What happens after you send it</h2>
+  <section class="v-sec c-help" aria-labelledby="help-h">
+    <div class="wrap">
+      <div class="v-head">
+        <h2 class="v-title" id="help-h">What helps us quote</h2>
+        <p>Send any of these you already have. None of them is needed before you write.</p>
       </div>
-      <ol class="stages stages--three">
-        <li><h3>A reply by email</h3><p>We read your brief and reply by email, with any questions and a time to see the site.</p></li>
-        <li><h3>A site visit</h3><p>We walk the site with you to see access, levels and ground conditions, and agree what you need.</p></li>
-        <li><h3>A written scope</h3><p>You get the scope in writing: what is included and what is not. The programme, estimate and method statement follow before any work starts.</p></li>
+      <ul class="v-cols v-cols--4 v-cols--marked">
+        <li>
+          <h3 class="v-cols__name">Drawings</h3>
+          <p>Plans or sketches with dimensions, in any format. Attach them to the email when it opens.</p>
+        </li>
+        <li>
+          <h3 class="v-cols__name">Site location</h3>
+          <p>The village and taluk, a survey number or a map pin, and how a lorry reaches the site.</p>
+        </li>
+        <li>
+          <h3 class="v-cols__name">Target date</h3>
+          <p>When you want work to start, and when you need to move in or open.</p>
+        </li>
+        <li>
+          <h3 class="v-cols__name">Budget range</h3>
+          <p>A range is enough. It tells us whether to price one full scope or a few options.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="v-sec v-sec--ink" id="after" aria-labelledby="after-h">
+    <div class="wrap">
+      <div class="v-head">
+        <h2 class="v-title" id="after-h">What happens after you send it</h2>
+        <p>From your brief to a written scope, in three steps.</p>
+      </div>
+      <ol class="v-steps">
+        <li>
+          <h3 class="v-step__name">A reply by email</h3>
+          <p>We read your brief and reply by email, with any questions and a time to see the site.</p>
+        </li>
+        <li>
+          <h3 class="v-step__name">A site visit</h3>
+          <p>We walk the site with you to see access, levels and ground conditions, and agree what you need.</p>
+        </li>
+        <li>
+          <h3 class="v-step__name">A written scope</h3>
+          <p>You get the scope in writing: what is included and what is not. The programme, estimate and method statement follow before any work starts.</p>
+        </li>
       </ol>
+      <p class="v-links">
+        <a class="v-link" href="index.html#documents">The four written documents <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+        <a class="v-link" href="services.html#stages-h">How a project runs, from survey to handover <svg class="arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 4l4 4-4 4"/></svg></a>
+      </p>
     </div>
   </section>
 
-  <section class="section close" aria-labelledby="close-h">
-    <div class="wrap" data-reveal>
-      <div class="datum" aria-hidden="true"></div>
-      <h2 class="label" id="close-h">Talk to us</h2>
-      <p class="close-line">Or write from any email account.</p>
-      <p class="lead">Send drawings, site photos or a sketch to the address below, with your name and the site location.</p>
-      <div class="actions">
-        <a class="close-email" href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a>
+  <section class="v-sec c-faq" id="questions" aria-labelledby="qa-h">
+    <div class="wrap c-faq__grid">
+      <div class="v-head c-faq__head">
+        <h2 class="v-title" id="qa-h">Common questions</h2>
+        <p>We have no finished projects to show yet, so these come up first.</p>
+      </div>
+      <div class="c-faq__body">
+        <div class="c-qa">
+          <details open>
+            <summary>You're new. Why should I trust you?</summary>
+            <div>
+              <p>Judge us on what you can check before you commit. The company is registered as PAT Infratech (OPC) Private Limited, with a registered office in Kumarapalayam Taluk. You get the scope, programme, estimate and method statement in writing before any work starts, and you can hold us to each of them.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Who runs the work?</summary>
+            <div>
+              <p>The founder. PAT Infratech is a One Person Company, so the person who reads your brief is the person responsible for the work, from the first site visit to handover.</p>
+            </div>
+          </details>
+          <details>
+            <summary>Where are you based?</summary>
+            <div>
+              <p>Our registered office is in Namakkal District:</p>
+              <address>6/99, Chinna Anangur, Anangur (Post),<br>Kumarapalayam (Taluk), Namakkal (District),<br>Tamil Nadu &ndash; 637304, India</address>
+              <p>Send the site location with your brief and we will tell you plainly whether we can take the work on.</p>
+            </div>
+          </details>
+          <details>
+            <summary>What should I send you?</summary>
+            <div>
+              <p>Whatever you have: drawings or a sketch, the site location, the date you need it by and a budget range. A rough brief is enough to start; we will ask for the rest.</p>
+            </div>
+          </details>
+        </div>
+        <p class="c-end">Or write from any email account to <a href="mailto:patinfratechkas@gmail.com">patinfratechkas@gmail.com</a>, with drawings, site photos or a sketch attached.</p>
       </div>
     </div>
   </section>
 </main>
 <footer class="site-footer">
   <div class="wrap">
+    <p class="footer-wordmark" aria-hidden="true">PAT Infratech</p>
     <div class="footer-grid">
       <div class="footer-col">
         <p class="footer-name">PAT Infratech (OPC) Private Limited</p>
         <p class="muted">Construction and infrastructure from Namakkal District, Tamil Nadu.</p>
-        <!-- CIN: add when supplied, e.g. <p class="muted">CIN …</p> -->
-        <!-- GSTIN: add when supplied, e.g. <p class="muted">GSTIN …</p> -->
+        <!-- CIN: add when supplied, e.g. <p class="muted">CIN ...</p> -->
+        <!-- GSTIN: add when supplied, e.g. <p class="muted">GSTIN ...</p> -->
       </div>
       <div class="footer-col">
         <h2 class="label">Registered office</h2>

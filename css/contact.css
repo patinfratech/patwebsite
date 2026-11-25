@@ -1,49 +1,112 @@
-/* Contact page only. Tokens from style.css; no new colours. */
+/* Contact page only (v3, P1 "website mode"). Built from the v3 inner kit in style.css; tokens only.
+   A utility page: a compact head, then the contact routes and the form side by side in the first screen.
+   Ground: cement throughout, with one ink band (what happens after you send it), then the ink footer.
+   Order: hero (eyebrow + H1) -> routes + project brief -> what helps us quote -> after you send it (ink)
+   -> common questions. No drawing, no statement band, no close block: the page itself is the close. */
 
-/* Contact methods sit in the hero, so they are the first thing on the page. */
-.page-hero .contact-methods { margin-top: var(--s5); max-width: 62rem; }
-.method-name { font-weight: 500; }
-
-/* Brief form beside "What helps us quote" from 1040px; stacked below. */
-.brief-grid { display: grid; gap: var(--s6); }
+/* ---------- hero: only the heading, so the routes and the form start high ---------- */
+.c-hero { padding-block: clamp(28px, 4vw, 36px) 0; }
+@media (min-width: 960px) {
+  .c-hero { display: block; min-height: 0; padding-block: 36px 0; }
+}
+.c-head .v-eyebrow { margin-bottom: 10px; }
+.c-title { max-width: 18ch; }
 @media (min-width: 1040px) {
-  .brief-grid {
-    grid-template-columns: minmax(0, 46rem) minmax(0, 1fr);
-    gap: var(--s6);
-    align-items: start;
-  }
+  .c-title { max-width: none; }
 }
-@media (max-width: 1039px) {
-  .quote-help { order: -1; }
+
+/* ---------- routes beside the project brief ---------- */
+.v-hero.c-hero + .v-sec.c-contact { padding-top: var(--s3); }
+.c-grid { display: grid; gap: var(--s4) var(--s6); align-items: start; }
+@media (min-width: 1040px) {
+  .c-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
-.brief-main { min-width: 0; }
+
+.c-side { min-width: 0; }
+.c-side .lead { max-width: 34rem; }
+
+/* The two routes: the email (with its Copy button) and the registered office. No rule above them. */
+.c-routes { margin-top: var(--s4); gap: var(--s4); }
+@media (min-width: 1040px) {
+  .c-routes { grid-template-columns: minmax(0, 1fr); }
+}
+.c-routes .method { gap: 6px; padding-top: 0; border-top: 0; }
+.c-routes .label { font-size: .9375rem; color: var(--v-soft); }
+.c-routes .email { font-size: clamp(1.25rem, 1.05rem + .7vw, 1.5rem); line-height: 1.3; }
+.c-routes .method-actions { margin-top: 0; }
+.method-name { font-weight: 500; }
+.c-routes address { font-size: clamp(1rem, .95rem + .3vw, 1.125rem); line-height: 1.55; }
+
+/* Call / WhatsApp slot (main.js fills it when a number is set; empty and gone until then). */
+.c-quick { margin-top: var(--s3); }
+.c-quick:empty { display: none; }
+
+.c-jump { margin-top: var(--s4); }
+.c-jump ul { gap: 0 var(--s3); }
+@media (min-width: 1040px) {
+  .c-jump ul { flex-direction: column; gap: 0; }
+}
+.c-jump a { min-height: 44px; }
+
+/* The form on a white panel: larger labels and fields, one column on phones. */
+.c-brief { padding: clamp(20px, 2.2vw, 32px); }
+.c-brief__head { display: grid; gap: 4px; margin-bottom: 20px; }
+.c-brief__head p { max-width: 56ch; font-size: .9375rem; color: var(--v-soft); }
+.c-brief .form { max-width: none; row-gap: 18px; }
+.c-brief .field textarea { height: 8.5rem; min-height: 8.5rem; }
+.c-brief .field label { font-size: .9375rem; }
+.c-brief .field input,
+.c-brief .field select { min-height: 52px; }
+.c-brief .form-foot { padding-top: 4px; }
+.c-brief .form-foot > .btn { min-width: 12rem; min-height: 52px; }
 
 /* The address beside the send button, with its own Copy button. */
 .form-address { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
 .form-address a { font-weight: 500; overflow-wrap: anywhere; }
 
-.quote-help {
-  padding: var(--s4);
-  background: var(--raised);
-  border: 1px solid var(--line);
+/* ---------- common questions: quiet cards, no ruled lines ---------- */
+.c-faq__grid { display: grid; gap: 0 var(--s6); }
+@media (min-width: 960px) {
+  .c-faq__grid { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: start; }
+  .c-faq__head { margin-bottom: 0; }
+}
+.c-faq__head > p { max-width: 34ch; }
+.c-faq__body { min-width: 0; }
+.c-qa { display: grid; gap: 12px; }
+.c-qa details { background: var(--v-panel); border-radius: var(--radius); }
+.c-qa summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+  min-height: 64px;
+  padding: 18px clamp(18px, 2.2vw, 28px);
+  font: 600 clamp(1.1875rem, 1.05rem + .45vw, 1.375rem)/1.25 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.006em;
+  cursor: pointer;
+  list-style: none;
   border-radius: var(--radius);
 }
-@media (min-width: 1040px) {
-  .quote-help { position: sticky; top: calc(var(--header-h) + var(--s4)); }
+.c-qa summary::-webkit-details-marker { display: none; }
+/* A quiet + in a ring; it becomes a minus when the answer is open. */
+.c-qa summary::after {
+  content: "";
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--v-accent), var(--v-accent)) center / 12px 1.5px no-repeat,
+    linear-gradient(var(--v-accent), var(--v-accent)) center / 1.5px 12px no-repeat;
+  transition: background-size var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
 }
-.quote-help h2 { font-size: clamp(1.5rem, 2.4vw, 1.875rem); }
-.quote-help ul { display: grid; margin-top: var(--s3); border-bottom: 1px solid var(--line); }
-.quote-help li {
-  display: grid;
-  gap: 4px;
-  padding: var(--s2) 0;
-  border-top: 1px solid var(--line);
-}
-.quote-help h3 { font-size: 1.0625rem; }
-.quote-help p { color: var(--slate); }
+.c-qa details[open] > summary::after { background-size: 12px 1.5px, 1.5px 0; }
+.c-qa summary:hover::after { border-color: var(--v-fg); }
+.c-qa summary:focus-visible { outline-offset: -3px; }
+.c-qa details > div { padding: 0 clamp(18px, 2.2vw, 28px) clamp(20px, 2.2vw, 28px); max-width: 68ch; }
+.c-qa details > div > * + * { margin-top: .75em; }
 
-/* Three steps instead of five: same component, three columns from 900px. */
-@media (min-width: 900px) {
-  .stages--three { grid-template-columns: repeat(3, 1fr); }
-  .stages--three > li { padding-right: var(--s5); }
-}
+.c-end { margin-top: var(--s4); max-width: 60ch; color: var(--v-soft); }
+.c-end a { font-weight: 500; overflow-wrap: anywhere; }

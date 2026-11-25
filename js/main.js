@@ -20,22 +20,6 @@
   const $$ = (sel, scope) => Array.prototype.slice.call((scope || document).querySelectorAll(sel));
   const EASE = "cubic-bezier(.2,.7,.2,1)";
 
-  // Calls fn once when el is at least 30% visible (or fills 30% of the viewport).
-  function whenVisible(el, fn) {
-    if (!("IntersectionObserver" in window)) { fn(); return; }
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        const tall = entry.intersectionRect.height >= window.innerHeight * 0.3;
-        if (entry.intersectionRatio >= 0.3 || tall) {
-          io.disconnect();
-          fn();
-        }
-      });
-    }, { threshold: [0, 0.1, 0.2, 0.3, 0.5] });
-    io.observe(el);
-  }
-
   // ---- Mobile navigation ------------------------------------------------
   function initNav() {
     const toggle = document.getElementById("nav-toggle");
@@ -103,6 +87,10 @@
       row.appendChild(wa);
     }
     header.appendChild(row);
+    // Home's closing block: the same Call / WhatsApp links beside "Send a project brief".
+    $$("[data-contact-actions]").forEach(function (box) {
+      $$("a", row).forEach(function (a) { box.appendChild(a.cloneNode(true)); });
+    });
   }
 
   // ---- Footer year ------------------------------------------------------
@@ -112,10 +100,10 @@
   }
 
   // ---- Drawings: one stroke draw-in --------------------------------------
-  // <svg data-draw="hero"> draws on load (whole sequence <= 1.2 s).
-  // <svg data-draw> draws once when 30% visible. Skipped under reduced motion.
+  // <svg data-draw="hero"> draws on load (whole sequence <= 1.2 s). Skipped on phones and under
+  // reduced motion. Website mode has no other draw-in: nothing moves because the page scrolled.
   const GEOMETRY = "path, line, polyline, polygon, rect, circle, ellipse";
-  const pendingDrawings = []; // prepared (hidden) but not yet finished
+  const pendingDrawings = []; // prepared (hidden) but not yet finished, for beforeprint
 
   // Strokes are non-scaling, so dash lengths are in screen pixels: path length x screen scale.
   function screenScale(svg) {
@@ -130,7 +118,8 @@
   }
 
   // Annotation points (.note) are not drawn in: they stay put, visible and focusable from the start.
-  const notInNote = function (el) { return !(el.closest && el.closest(".note")); };
+  // The hero's faint model grid (.h-scan) is left out as well: it simply shows.
+  const notInNote = function (el) { return !(el.closest && el.closest(".note, .h-scan")); };
 
   function prepareDrawing(svg) {
     const strokes = [];
@@ -180,10 +169,10 @@
     if (i !== -1) pendingDrawings.splice(i, 1);
   }
 
-  function playDrawing(parts, hero) {
+  function playDrawing(parts) {
     if (parts.done) return;
-    const spread = hero ? 400 : 520;
-    const dur = hero ? 620 : 760;
+    const spread = 400;
+    const dur = 620;
     const n = parts.strokes.length;
     // Re-measure now: a font swap, rotation or resize since load changes the screen scale.
     const scale = screenScale(parts.svg);
@@ -219,37 +208,25 @@
   }
 
   function initDrawings() {
-    const svgs = $$("svg[data-draw]");
+    const svgs = $$('svg[data-draw="hero"]');
     if (!svgs.length || reduceMotion) return;
+    // v3 inner kit: phones drop the decorative draw-in (the drawing simply shows, complete).
+    const phone = !!(window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches);
     svgs.forEach(function (svg) {
-      const hero = svg.getAttribute("data-draw") === "hero";
-      if (!hero && !("IntersectionObserver" in window)) return; // leave it complete
+      if (phone && svg.closest && svg.closest(".v-hero, .v-row, .v-tile, .v-bench")) return;
       // On a slow load the CSS fallback shows the hero complete at 1.2 s. If this script arrives
       // that late (or close to it), leave the drawing as it is rather than blank it and redraw.
-      if (hero && window.performance && typeof performance.now === "function" && performance.now() > 1000) return;
+      if (window.performance && typeof performance.now === "function" && performance.now() > 1000) return;
       let parts;
       try { parts = prepareDrawing(svg); } catch (e) { return; }
-      if (hero) playDrawing(parts, true);
-      else whenVisible(svg, function () { playDrawing(parts, false); });
+      playDrawing(parts);
     });
   }
 
-  // Printing: show every drawing and matrix marker complete, whatever has scrolled into view.
+  // Printing: show a drawing that is still drawing in complete.
   window.addEventListener("beforeprint", function () {
     pendingDrawings.slice().forEach(finishDrawing);
-    $$(".matrix[data-fill]").forEach(function (m) { m.classList.add("is-filled"); });
   });
-
-  // ---- Technology matrix: markers fill along the rows ---------------------
-  function initMatrix() {
-    $$(".matrix[data-fill]").forEach(function (m) {
-      if (reduceMotion || !("IntersectionObserver" in window)) { m.classList.add("is-filled"); return; }
-      $$(".dot, .ring", m).forEach(function (el, i) {
-        el.style.transitionDelay = Math.min(i * 45, 900) + "ms";
-      });
-      whenVisible(m, function () { m.classList.add("is-filled"); });
-    });
-  }
 
   // ---- Copy buttons ---------------------------------------------------------
   function copyText(text) {
@@ -528,8 +505,8 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        status.textContent = "WhatsApp should open with your brief filled in. Nothing is sent until you press send there. " +
-          "If it did not open, email your brief to " + EMAIL + ".";
+        status.textContent = "WhatsApp should now be open with the brief filled in. Nothing is sent until you press send there. " +
+          "If it did not open, copy the address " + EMAIL + " and write to us directly.";
         return;
       }
 
@@ -557,45 +534,18 @@
       }
       const href = base + encode(body);
       window.location.href = href;
-      status.textContent = "Your email app should open with your brief filled in. Nothing is sent until you press send there. " +
+      status.textContent = "Your email app should now be open with the brief filled in. Nothing is sent until you press send there. " +
         (shortened ? "Your description was long, so paste the rest into the email. " : "") +
-        "If no email app opened, copy the address " + EMAIL + " and send your brief from any email account.";
+        "If it did not open, copy the address " + EMAIL + " and write to us directly.";
     });
-  }
-
-  // ---- Reveal: [data-reveal] blocks rise in once ------------------------------
-  // Blocks already on screen (or above it) are marked .is-in before html.reveal-ready is set, so
-  // they are never hidden. CSS hides the rest only at >=768px without reduced motion.
-  function initReveal() {
-    const els = $$("[data-reveal]");
-    if (!els.length) return;
-    const show = function (el) { el.classList.add("is-in"); };
-    if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach(show); return; }
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const pending = els.filter(function (el) {
-      const r = el.getBoundingClientRect();
-      if (r.top < vh) { show(el); return false; } // in view or already scrolled past
-      return true;
-    });
-    root.classList.add("reveal-ready");
-    if (!pending.length) return;
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        // Intersecting, or jumped past (an anchor link): show it and stop watching.
-        if (entry.isIntersecting || entry.boundingClientRect.bottom < 0) {
-          show(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0 });
-    pending.forEach(function (el) { io.observe(el); });
   }
 
   // ---- Drawing annotations: one shared note --------------------------------------
-  // <g class="note" tabindex="0" role="button" aria-label="…" data-note="…"> inside a drawing.
+  // <g class="note" aria-label="…" data-note="…"> inside a drawing; tabindex and role="button" are
+  // added here, so without JS the notes are not dead tab stops (their text is in the figcaption).
   // Hover, focus, tap, Enter or Space shows the note; Escape or a tap elsewhere hides it.
   const SVG_NS = "http://www.w3.org/2000/svg";
-  const HIT_PX = 12; // on-screen radius of the hit circle: at least a 24px target
+  const HIT_PX = 22; // on-screen radius of the hit circle: a 44px target
 
   function initNotes() {
     const notes = $$(".note");
@@ -641,6 +591,20 @@
         const scale = screenScale(svg);
         const r = Math.max(12, HIT_PX / scale);
         $$(".note-hit", svg).forEach(function (c) { c.setAttribute("r", r.toFixed(2)); });
+      });
+      // A drawing cropped to its frame (Home's hero uses "slice") can push a note out of view:
+      // such a note leaves the tab order until a resize brings it back.
+      notes.forEach(function (note) {
+        const svg = note.ownerSVGElement;
+        const hit = note.querySelector(".note-hit");
+        if (!svg || !hit) return;
+        const s = svg.getBoundingClientRect();
+        const h = hit.getBoundingClientRect();
+        const x = h.left + h.width / 2;
+        const y = h.top + h.height / 2;
+        const inside = x >= s.left && x <= s.right && y >= s.top && y <= s.bottom;
+        note.tabIndex = inside ? 0 : -1;
+        if (inside) note.removeAttribute("aria-hidden"); else note.setAttribute("aria-hidden", "true");
       });
     }
     sizeHits();
@@ -763,8 +727,8 @@
       bar.addEventListener("focusout", function () { window.setTimeout(update, 0); });
       document.body.appendChild(bar);
 
-      const anchor = document.querySelector(".hero .btn--primary, .page-hero .btn--primary") ||
-        document.querySelector(".hero, .page-hero") ||
+      const anchor = document.querySelector(".hero .btn--primary, .h-hero .btn--primary, .v-hero .btn--primary, .page-hero .btn--primary") ||
+        document.querySelector(".hero, .h-hero, .v-hero, .page-hero") ||
         document.querySelector("main > *");
       if (anchor) {
         new IntersectionObserver(function (entries) {
@@ -802,17 +766,11 @@
     else if (mq.addListener) mq.addListener(onChange);
   }
 
-  window.addEventListener("beforeprint", function () {
-    $$("[data-reveal]").forEach(function (el) { el.classList.add("is-in"); });
-  });
-
   initNav();
   initQuickContact();
   initYear();
-  initReveal();
   initDrawings();
   initNotes();
-  initMatrix();
   initCopy();
   initForm();
   initMobileCta();

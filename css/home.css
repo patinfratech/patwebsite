@@ -1,68 +1,370 @@
-/* Home page only. Tokens from style.css; no new colours. */
+/* Home (v3, P1 "website mode", owner approved 2026-11-24). Tokens from style.css only.
+   Every rule here is scoped to Home's own h- classes, so inner pages keep their look.
+   Ground: cement throughout, one ink band ("How a project runs"), then the ink footer. White only as
+   contained panels on cement; rust only for buttons, small marks and rules.
+   Heading ladder: H1 48-56px, section H2 32-36px, item H3 22-24px, body 17px.
+   Motion: the hero drawing draws in once on load (main.js), plus hover and focus feedback. Nothing
+   moves because the page scrolled. Without JS and under reduced motion the page is complete. */
 
-/* "And general civil works" carries an inline link; .index-list a styles every link in the
-   list as a full row, so put this one back to a plain text link. */
-.index-list .index-more a {
-  display: inline;
-  min-height: 0;
-  padding: 0;
-  border: 0;
-  color: var(--action);
-  text-decoration-line: underline;
+.h-main { position: relative; }
+
+/* Teal is for drawings only; the illustrator marks those strokes .ink-survey. */
+.h-main .ink-survey { stroke: var(--survey); }
+.h-main .fill-survey { fill: var(--survey); }
+.h-main .bm-mark { fill: var(--action); }
+
+/* ---------- shared ---------- */
+.h-sec { padding-block: var(--section); }
+/* Neighbouring sections on the one cement ground: a shorter gap, so they read as one page. */
+.h-sec:not(.h-how) + .h-sec:not(.h-how) { padding-top: calc(var(--section) * .5); }
+.h-head { display: grid; gap: 10px; margin-bottom: clamp(24px, 3vw, 36px); }
+.h-head > p { max-width: 60ch; color: var(--slate); }
+/* Section H2: 28px on phones, 32-36px on desktop. */
+.h-title {
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -.012em;
+  max-width: 40ch;
+}
+/* Item H3: 20px on phones, 22-24px on desktop. */
+.h-group__name,
+.h-stages h3,
+.h-doclist h3 {
+  font: 600 clamp(1.25rem, 1.1rem + .45vw, 1.5rem)/1.2 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.008em;
+  text-wrap: balance;
+}
+.h-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 500;
+}
+.h-link .arrow { transition: transform var(--t-fast) var(--ease-out); }
+.h-link:hover .arrow { transform: translateX(3px); }
+.h-plan {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid var(--survey);
+  border-radius: var(--radius);
+  color: var(--survey);
+  font: 500 .8125rem/1.5 var(--font-text);
+  white-space: nowrap;
 }
 
-/* What we build: a small cross-section beside each row from 1040px. On narrower screens the
-   rows stay text only. The second group reveals one step after the first. */
-.index-list > [data-reveal] + [data-reveal] { --reveal-delay: 60ms; }
-.index-list .thumb { display: none; }
-@media (min-width: 1040px) {
-  .index-list--thumbs a { grid-template-columns: 3rem minmax(0, 1fr) auto auto; }
-  .index-list--thumbs .thumb {
-    display: block;
-    grid-column: 3;
-    grid-row: 1 / span 2;
-    align-self: center;
-    width: 72px;
-    height: 48px;
-    color: var(--slate);
-    background: var(--raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    transition: color var(--t-out) var(--ease);
+/* ---------- 1. hero (cement, compact) ---------- */
+.h-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--ground);
+  padding-block: clamp(24px, 4vw, 48px) clamp(20px, 3vw, 36px);
+}
+.h-hero__copy { position: relative; z-index: 2; }
+.h-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--s2);
+  font: 500 .9375rem/1.4 var(--font-text);
+  color: var(--slate);
+}
+.h-eyebrow::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 9px;
+  background: var(--brand-green);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+/* H1: 36px on phones, 56px at 1440. */
+.h-hero .display {
+  font-size: clamp(2.25rem, 1.25rem + 2.8vw, 3.5rem);
+  line-height: 1.02;
+  max-width: 21ch;
+}
+.h-hero .lead { margin-top: var(--s2); max-width: 36rem; }
+.h-hero .actions { margin-top: var(--s3); gap: 12px 28px; }
+.h-cue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  color: var(--ink);
+  font-weight: 500;
+}
+.h-cue .arrow { transition: transform var(--t-fast) var(--ease-out); }
+.h-cue:hover .arrow { transform: translateY(3px); }
+
+.h-hero__art { position: relative; order: 2; margin: var(--s2) 0 0; }
+.h-contours {
+  display: block;
+  width: 100%;
+  height: clamp(96px, 26vw, 220px);
+  color: var(--ink);
+}
+.h-contours .d-thin { stroke: var(--survey); stroke-opacity: .7; }
+.h-contours text { font-size: 15px; }
+.h-contours .halo { stroke: var(--ground); }
+.h-scan__grid { stroke: var(--survey); stroke-opacity: .16; }
+.h-hero__cap {
+  padding: 6px var(--gutter) 0;
+  font: 400 .8125rem/1.4 var(--font-text);
+  color: var(--slate);
+}
+@media (min-width: 960px) {
+  .h-hero {
+    justify-content: center;
+    min-height: clamp(360px, 44svh, 420px);
   }
-  .index-list--thumbs .arrow { grid-column: 4; grid-row: 1 / span 2; }
-  .index-list--thumbs a:hover .thumb,
-  .index-list--thumbs a:focus-visible .thumb { color: var(--ink); transition-duration: var(--t-in); }
+  /* The copy column lets pointer events through to the drawing's notes beside it. */
+  .h-hero__copy { pointer-events: none; }
+  .h-hero__copy > * { pointer-events: auto; }
+  .h-hero__copy > .lead { max-width: min(38rem, 50%); }
+  .h-hero__art {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(52vw, 880px);
+    margin: 0;
+  }
+  .h-contours {
+    height: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%);
+    mask-image: linear-gradient(to right, transparent 0, #000 30%);
+  }
+  .h-contours text { font-size: 9px; }
+  /* The caption ends on the content edge (the wrap), not the screen edge. */
+  .h-hero__cap {
+    position: absolute;
+    right: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+    bottom: 10px;
+    max-width: 21rem;
+    padding: 4px 8px;
+    background: var(--ground);
+    text-align: right;
+  }
+}
+@media (min-width: 1280px) {
+  .h-contours text { font-size: 7.5px; }
 }
 
-/* How a project runs, on the dark band: a line drawing per stage. On phones the drawing sits
-   to the right of the stage text; from 900px it sits above the heading in each column. */
-.section--night .section-head > p { color: var(--on-night); }
-.section--night .stages h3::before { color: var(--on-night); }
-.stages--icons > li {
+/* ---------- 2. PAT Infratech today: a white panel of checkable facts under the hero ---------- */
+.h-today { padding-block: 0; }
+.h-today__panel {
+  display: grid;
+  gap: 12px var(--s4);
+  padding: clamp(18px, 2vw, 24px) clamp(18px, 2.4vw, 28px);
+  background: var(--raised);
+  border-radius: var(--radius);
+}
+.h-today__title { font: 500 1rem/1.4 var(--font-text); letter-spacing: 0; max-width: none; }
+.h-today__rows { display: grid; gap: 8px; }
+.h-today__rows li { position: relative; padding-left: 18px; font-size: .9375rem; line-height: 1.5; }
+.h-today__rows li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: .62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-green);
+}
+.h-today__stamp { font-size: .875rem; color: var(--slate); }
+.h-today__stamp a { display: flex; align-items: center; width: fit-content; min-height: 44px; font-weight: 500; }
+@media (min-width: 1040px) {
+  .h-today__panel { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); align-items: start; }
+  .h-today__title { grid-column: 1; grid-row: 1; }
+  .h-today__stamp { grid-column: 1; grid-row: 2; }
+  .h-today__rows { grid-column: 2; grid-row: 1 / span 2; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
+  .h-today__rows li { padding-left: 0; }
+  .h-today__rows li::before { content: none; }
+}
+
+/* ---------- 3. what we build: nine named services in two groups ---------- */
+.h-groups { display: grid; gap: var(--s5); }
+.h-group { display: grid; gap: 12px; align-content: start; min-width: 0; }
+/* The group drawing sits on the cement beside its name, like the step marks: no white panel. Its
+   labels would render at 4-5px at this size, so the thumbnails carry none. */
+.h-group__art { margin: 0; }
+.h-group__svg { display: block; width: auto; max-width: 100%; height: clamp(112px, 10.5vw, 152px); color: var(--ink); }
+.h-group__name a { color: var(--ink); text-decoration-thickness: 1px; }
+.h-group__name a:hover { color: var(--action); }
+/* The page's main routes: 44px targets from padding and line height, not bigger type. */
+.h-group__name a,
+.h-svc a,
+.h-methods__name { display: inline-flex; align-items: center; min-height: 44px; }
+.h-svc { display: grid; gap: 0; }
+.h-svc li { display: grid; padding-bottom: 6px; }
+.h-svc a { justify-self: start; font-weight: 500; }
+.h-svc span { color: var(--slate); font-size: .9375rem; line-height: 1.45; }
+@media (min-width: 768px) {
+  .h-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4) var(--s6); }
+}
+.h-build__foot { margin-top: var(--s4); color: var(--slate); max-width: 70ch; }
+
+/* ---------- 4. how a project runs (the page's one ink band): all five stages at once ---------- */
+.h-how {
+  background: var(--night);
+  color: var(--on-night);
+}
+.h-how :focus-visible { outline-color: var(--on-night); }
+.h-how ::selection { background: var(--on-night); color: var(--ink); }
+.h-how a { color: var(--on-night); }
+.h-how .h-head > p { color: rgb(244 240 232 / .8); }
+/* Phones and tablets: a vertical stepper. From 900px (as the kit's step line): one row with a ring
+   per stage on one line. */
+.h-stages { --ring: 13px; --gap: var(--s4); display: grid; gap: var(--gap); }
+.h-stages > li { position: relative; display: grid; gap: 8px; align-content: start; padding-left: calc(var(--ring) + 20px); min-width: 0; }
+.h-stages > li::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 6px;
+  width: var(--ring);
+  height: var(--ring);
+  border: 1.5px solid var(--survey-night);
+  border-radius: 50%;
+  background: var(--night);
+}
+.h-stages > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--ring) / 2 - .75px);
+  top: calc(6px + var(--ring) / 2);
+  bottom: calc(-1 * var(--gap) - 6px - var(--ring) / 2);
+  width: 1.5px;
+  background: var(--survey-night);
+}
+.h-stages p { max-width: 40ch; color: rgb(244 240 232 / .86); }
+.h-receive { font-size: .9375rem; line-height: 1.5; }
+.h-receive span {
+  display: block;
+  margin-bottom: 2px;
+  font: 500 .875rem/1.4 var(--font-text);
+  color: var(--survey-night);
+}
+.h-tag {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border: 1px solid rgb(244 240 232 / .45);
+  border-radius: var(--radius);
+  font: 500 .8125rem/1.5 var(--font-text);
+}
+.h-how__more { margin-top: var(--s3); }
+@media (min-width: 900px) {
+  .h-stages { --gap: var(--s3); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .h-stages > li { padding: calc(var(--ring) + 20px) var(--s1) 0 0; }
+  .h-stages > li::before { top: 0; }
+  .h-stages > li:not(:last-child)::after {
+    left: calc(var(--ring) / 2);
+    top: calc(var(--ring) / 2 - .75px);
+    bottom: auto;
+    width: calc(100% + var(--gap));
+    height: 1.5px;
+  }
+}
+
+/* ---------- 5. the method: three small labelled drawings beside the six methods ---------- */
+.h-tech__grid { display: grid; gap: var(--s5); }
+.h-figs { display: grid; gap: var(--s3); }
+.h-fig { margin: 0; min-width: 0; }
+/* At 160-300px wide the drawings' 11-12-unit labels would render at 4-6px: the thumbnails carry
+   none, and the caption names what each one shows. */
+.h-fig__art text { display: none; }
+.h-fig__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 8px;
+  background: var(--raised);
+  border-radius: var(--radius);
+  color: var(--ink);
+}
+.h-fig figcaption { margin-top: var(--s1); font-size: .875rem; line-height: 1.45; color: var(--slate); }
+.h-fig__name { display: block; font-weight: 500; color: var(--ink); }
+.h-fig .h-plan { margin-top: 6px; }
+/* Phones: each drawing beside its caption, so the three stay compact. */
+@media (max-width: 599.98px) {
+  .h-fig { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--s2); align-items: start; }
+  .h-fig figcaption { margin-top: 0; }
+}
+@media (min-width: 600px) {
+  .h-figs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); }
+}
+.h-aim { margin: var(--s4) 0 var(--s1); padding-left: var(--s3); border-left: 2px solid var(--action); }
+.h-aim blockquote { margin: 4px 0 0; }
+.h-aim blockquote p {
+  font: 600 clamp(1.25rem, 1.05rem + .6vw, 1.5rem)/1.22 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+  max-width: 40ch;
+}
+.h-methods__list { display: grid; gap: 4px; margin-bottom: var(--s1); }
+.h-methods__list li {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: var(--s2);
-  align-content: start;
+  gap: 2px var(--s2);
+  align-items: baseline;
 }
-.stages--icons > li > * { grid-column: 1; }
-.stages--icons .stage-icon {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  width: 40px;
-  height: 40px;
-}
-@media (min-width: 900px) {
-  .stages--icons > li { display: block; }
-  .stages--icons .stage-icon {
-    display: block;
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--s2);
-  }
+.h-methods__name { justify-self: start; font-weight: 500; }
+.h-methods__desc { grid-column: 1 / -1; color: var(--slate); font-size: .9375rem; line-height: 1.5; }
+@media (min-width: 1040px) {
+  .h-tech__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s6); align-items: start; }
 }
 
-/* Questions: heading and intro beside the questions from 960px. */
-.split > .section-head { margin-bottom: 0; }
-.qa address { margin-top: .75em; }
+/* ---------- 6. the four documents (cement) ---------- */
+.h-doclist { display: grid; gap: var(--s3) var(--s4); }
+.h-doclist li { display: grid; gap: 6px; align-content: start; min-width: 0; }
+/* The small teal mark: a station ring on a short survey line. */
+.h-doclist h3::before {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 11px;
+  margin-bottom: 12px;
+  background:
+    radial-gradient(circle at 5.5px 50%, transparent 3.6px, var(--survey) 3.8px 5.2px, transparent 5.4px),
+    linear-gradient(var(--survey), var(--survey)) 11px 50% / 33px 1.5px no-repeat;
+}
+.h-doclist p { color: var(--slate); max-width: 40ch; }
+@media (min-width: 600px) { .h-doclist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .h-doclist { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.h-docs__more { margin-top: var(--s4); max-width: 70ch; }
 
+/* ---------- 7. start a project (cement, compact) ---------- */
+.h-close__grid { display: grid; gap: var(--s4); }
+.h-close .lead { margin-top: var(--s2); }
+.h-close .actions { margin-top: var(--s3); gap: 12px 28px; }
+.h-bench__art { display: block; width: clamp(88px, 9vw, 128px); height: auto; color: var(--ink); overflow: visible; }
+.h-bench__art text { font-size: 17px; }
+.h-bench__line {
+  margin-top: var(--s1);
+  max-width: 16ch;
+  font: 600 1.25rem/1.15 var(--font-display);
+  font-stretch: 87.5%;
+}
+@media (min-width: 960px) {
+  .h-close__grid { grid-template-columns: minmax(0, 9fr) minmax(0, 3fr); gap: var(--s5); align-items: center; }
+  .h-bench { justify-self: end; }
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 767.98px) {
+  .h-hero { padding-block: 24px 12px; }
+  .h-hero .actions { gap: 4px 20px; }
+  .h-contours { height: 96px; }
+}
+/* The smallest phones: a shorter strip of contours keeps the hero under one 320x640 screen. */
+@media (max-width: 359.98px) {
+  .h-contours { height: 72px; }
+}

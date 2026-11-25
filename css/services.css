@@ -1,103 +1,77 @@
-/* services.html only. Tokens from style.css; no new colours. */
+/* services.html only (v3 P1, website mode). Uses the v- kit in style.css; tokens and kit custom
+   properties only, no new colours. Cement throughout, one ink band (contract types). */
 
-/* ---------- service groups and rows ---------- */
-.svc-groups { display: grid; gap: var(--s7); min-width: 0; }
-.svc-group > h2 { margin-bottom: var(--s2); }
+/* ---------- service rows: a modest drawing beside its service ---------- */
+/* The v2 drawings size their labels with @container plate queries (style.css), so each drawing
+   panel is a "plate" container: the labels stay about 12-13px whatever the panel width. */
+.svc-art { container: plate / inline-size; }
 
-.svc {
-  display: grid;
-  gap: var(--s4);
-  padding-block: var(--s5);
-  border-top: 1px solid var(--line);
+/* Side by side from 768px (the kit). From 1040px the drawing is narrower than the kit default (4/12
+   against 5/12), so the text beside it carries the row and two services share a screen at 1440x900.
+   Below 1040 it keeps 5/12, so its labels stay at 9px or more on screen. */
+.svc-rows { gap: clamp(32px, 3.4vw, 44px); }
+@media (min-width: 768px) {
+  .svc-rows > .v-row { align-items: center; }
 }
-.svc-group > h2 + .svc { border-top-color: var(--ink); }
-.svc:last-child { padding-bottom: 0; }
-
-.svc-text { display: grid; gap: var(--s2); align-content: start; justify-items: start; min-width: 0; }
-.svc h3 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-stretch: 87.5%;
-  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.875rem);
-  line-height: 1.1;
-  letter-spacing: -.01em;
-  text-wrap: balance;
+@media (min-width: 1040px) {
+  .svc-rows > .v-row {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    align-items: center;
+  }
 }
-.svc-text > p { max-width: 52ch; }
-.svc-text > .btn { margin-top: var(--s1); }
+.svc-rows .v-row__text { gap: 12px; }
 
-/* Scope ticks: ruled list with a drawn tick (non-text mark). */
-.ticks { width: 100%; max-width: 52ch; border-bottom: 1px solid var(--line); }
-.ticks li {
-  position: relative;
-  padding: 10px 0 10px 28px;
-  border-top: 1px solid var(--line);
-}
-.ticks li::before {
+/* Typical scope: a short list with a small teal dash, no rules. */
+.svc-scope { display: grid; gap: 2px; margin-top: 2px; }
+.svc-scope li { position: relative; padding-left: 16px; }
+.svc-scope li::before {
   content: "";
   position: absolute;
-  left: 3px;
-  top: calc(10px + .45em);
-  width: 11px;
-  height: 6px;
-  border-left: 1.5px solid var(--mark);
-  border-bottom: 1.5px solid var(--mark);
-  transform: rotate(-45deg);
+  left: 0;
+  top: .78em;
+  width: 8px;
+  height: 1.5px;
+  background: var(--v-survey);
 }
 
-.svc .plate { width: 100%; max-width: 560px; }
+/* ---------- services without a drawing: white tiles, two across ---------- */
+.svc-tiles { margin-top: clamp(32px, 4vw, 48px); }
+.svc-tiles .v-tile { gap: 12px; }
+/* The description reads as body text, the same as in the rows above. */
+.svc-tiles .v-tile__line { color: var(--v-fg); font-size: inherit; line-height: inherit; max-width: 60ch; }
+.svc-tiles .v-tile .v-link { margin-top: auto; }
 
-/* Two columns once the rows column is wide enough for text beside a readable plate. */
-@media (min-width: 1100px) {
-  .svc {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: var(--s5);
-    align-items: start;
-  }
-  .svc .plate { max-width: none; }
-}
-
-/* Rows without a drawing: text, scope list, then the button on phones;
-   from 600px the scope list takes the plate's column. */
-.svc--plain {
-  grid-template-areas: "text" "ticks" "btn";
-  gap: var(--s3);
-}
-.svc--plain > .svc-text { grid-area: text; }
-.svc--plain > .ticks { grid-area: ticks; }
-.svc--plain > .svc-btn { grid-area: btn; justify-self: start; }
-@media (min-width: 600px) {
-  .svc--plain {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-areas: "text ticks" "btn ticks";
-    grid-template-rows: auto 1fr;
-    column-gap: var(--s5);
-    row-gap: var(--s3);
-    align-items: start;
-  }
-  .svc--plain > .ticks { margin-top: 6px; }
-}
-@media (min-width: 1100px) {
-  .svc--plain { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); }
+/* ---------- contract types (the ink band) ---------- */
+.svc-contracts > li { gap: 10px; }
+.svc-contracts .svc-suits {
+  margin-top: 4px;
+  color: var(--v-fg);
+  font-size: .9375rem;
+  font-weight: 500;
 }
 
-/* ---------- contract types ---------- */
-.contracts { display: grid; gap: var(--s4); }
-@media (min-width: 900px) {
-  .contracts { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s5); }
+/* ---------- how a project runs ---------- */
+/* Each stage links to where it is explained: a plain underlined link, 44px tall, no arrow. */
+.svc-steps > li { display: grid; align-content: start; justify-items: start; }
+.svc-step-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 2px;
+  font-size: .9375rem;
+  font-weight: 500;
+  line-height: 1.3;
 }
-.contracts > li {
-  display: flex;
-  flex-direction: column;
-  gap: var(--s2);
-  padding-top: var(--s3);
-  border-top: 1px solid var(--ink);
+
+/* ---------- hero: a wider copy column, so the lead runs to three lines and the jump links to one ---------- */
+@media (min-width: 960px) {
+  /* Slightly less padding than the kit, to keep the hero within 0.6 of a 900px screen. */
+  .v-hero { padding-block: 44px 36px; }
 }
-.contracts h3 { font-size: 1.25rem; }
-.contracts p { max-width: 46ch; }
-.contracts p.label { margin-top: auto; padding-top: var(--s1); }
-
-/* ---------- stages: link inside the intro ---------- */
-.section-head a { font-weight: 500; }
-
-/* Close-block email: a 44px tap target (it sits outside running text). */
+/* From 1200px; at 960-1199 the kit's own wider copy column applies. */
+@media (min-width: 1200px) {
+  .v-hero__copy > .lead,
+  .v-hero__copy > .actions,
+  .v-hero__copy > .v-jump { max-width: min(40rem, 54%); }
+  .v-hero__art { width: min(46vw, 800px); }
+}
