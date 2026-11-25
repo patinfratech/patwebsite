@@ -49,10 +49,13 @@ nested (for example /old/page); keep that script if you ever re-paste the head o
 
 After changing css/style.css, js/main.js or anything in assets/
 ----------------------------------------------------------------
-Nothing extra to do. On Vercel, browsers reuse these files for up to an hour and then check for a newer
-copy, so an edit reaches every visitor within about an hour. (Pages themselves are always fresh.)
-The links carry a version number such as  css/style.css?v=1 . Raising it (v=2) on all six pages makes
-an urgent change show immediately; this is optional.
+On Vercel, browsers reuse these files for up to an hour and may keep using a cached copy for up to a
+day while they check for a newer one. (Pages themselves are always fresh.)
+Every CSS and JS link carries one version key, currently  ?v=3  (css/style.css?v=3, js/main.js?v=3 and
+each css/<page>.css?v=3). BUMP IT ON EVERY RELEASE: raise the number by one on every CSS and JS link on
+all six pages at once, so all pages share the same key. New HTML with an old key can be styled by stale
+CSS. Never go back to v=1 (the previous v2 site used it). The favicon keeps its own ?v=1; change it
+only if the icon changes.
 
 
 Settings in js/main.js
@@ -80,10 +83,10 @@ Logo and drawings
 -----------------
 The mark in the header of each page is a placeholder <svg class="logo-mark"> inside a fixed 40 x 40 slot.
 Replace it with the final logo on all six pages (keep the header identical on every page).
-The line drawings are illustrative, not drawings of PAT Infratech projects; the footer says so. Each sits
-in a fixed 3:2 or 4:5 frame, so a real project photograph can replace it later without changing the layout:
-use <img src="assets/your-photo.jpg" alt="what the photo shows" width="1200" height="800"> in place of the
-<svg> and change the caption.
+The line drawings are illustrative, not drawings of PAT Infratech projects; the footer says so. A real
+project photograph can replace one later: use <img src="assets/your-photo.jpg" alt="what the photo shows"
+width="1200" height="800"> in place of the <svg>, change the caption, and check the layout at phone and
+desktop widths.
 
 Company details that are not yet on the site (CIN, GSTIN, incorporation date, founder's name) have marked
 comment slots in the HTML. Add them only when they are confirmed.

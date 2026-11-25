@@ -1,74 +1,145 @@
-/* technology.html only. Tokens from style.css; no new colours. */
+/* Technology page only (v3 P1, "website mode"). Built on the v3 inner kit in style.css; tokens and
+   kit custom properties only, no new colours.
+   Ground: cement throughout, with one ink band (where AI is used), then the ink footer.
+   Order: hero -> six methods (a real <table>) -> AI and the engineer (ink) -> why better information
+   matters -> planned, not yet in use -> close. No tabs, no scroll motion, no reveals. */
 
-/* ---------- matrix ---------- */
-.matrix-hint { margin-bottom: var(--s1); }
-@media (min-width: 900px) { .matrix-hint { display: none; } }
-.matrix:focus-visible { outline-offset: 4px; }
-.matrix-key { align-items: center; }
-.matrix-key > span { display: inline-flex; align-items: center; }
-.key-dash { display: inline-block; width: 10px; margin-right: 8px; text-align: center; color: var(--slate); }
+/* ---------- hero ---------- */
+/* The mesh drawing's own label sits bottom-left, under the fade; the figcaption says it instead. */
+.v-hero__art text { display: none; }
 
-/* ---------- what each method is for ---------- */
-.methods-h { margin-top: var(--s6); margin-bottom: var(--s3); }
-.methods { display: grid; gap: 0 var(--s5); border-bottom: 1px solid var(--line); }
-@media (min-width: 768px) { .methods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1100px) { .methods { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.methods > div {
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  padding: var(--s2) 0 var(--s3);
-  border-top: 1px solid var(--line);
+/* ---------- the six methods: a real table, airy rows, no cell grid ---------- */
+.tech-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
 }
-.methods dt { font-weight: 500; }
-.methods .tag {
-  margin-left: 8px;
-  font: 500 .875rem/1 var(--font-text);
-  color: var(--slate);
+.tech-table th,
+.tech-table td {
+  padding: 0;
+  text-align: left;
+  vertical-align: top;
+  font-weight: 400;
+}
+.tech-table tbody tr { border-bottom: 1px solid var(--line); }
+.tech-table tbody tr:last-child { border-bottom: 0; }
+
+/* Method name: an item heading in the display face (a row header, so not an <h3>). */
+.tech-name {
+  display: block;
+  max-width: 16ch;
+  font: 600 clamp(1.25rem, 1.1rem + .45vw, 1.5rem)/1.2 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.008em;
+  text-wrap: balance;
+  color: var(--v-fg);
+}
+
+.tech-gives { display: grid; gap: var(--s2); align-items: start; }
+.tech-gives p { max-width: 52ch; }
+.tech-fig { max-width: 340px; }
+.tech-fig figcaption { max-width: 40ch; }
+
+/* Stage words as small chips: white on cement, ink text. */
+.tech-stages { display: flex; flex-wrap: wrap; gap: 6px; }
+.tech-stages li {
+  padding: 2px 9px;
+  background: var(--v-panel);
+  border-radius: var(--radius);
+  font: 500 .875rem/1.5 var(--font-text);
+  color: var(--v-fg);
   white-space: nowrap;
 }
-.methods dd { margin: 0; max-width: 46ch; }
 
-/* ---------- where AI is used ---------- */
-.ai-line {
-  margin-top: var(--s3);
-  padding-top: var(--s2);
-  max-width: 18ch;
-  border-top: 1px solid var(--ink);
-  font: 600 clamp(1.375rem, 1.1rem + 1vw, 1.75rem)/1.2 var(--font-display);
-  font-stretch: 87.5%;
-  letter-spacing: -.005em;
-  text-wrap: balance;
+/* Phones and small tablets: each row stacks into a labelled block. The table keeps its semantics
+   through the explicit ARIA roles in the markup (display: block drops them in some browsers). */
+@media (max-width: 899.98px) {
+  .tech-table,
+  .tech-table tbody,
+  .tech-table tr,
+  .tech-table th,
+  .tech-table td { display: block; }
+  .tech-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .tech-table tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px var(--s3);
+    padding-block: var(--s3);
+  }
+  .tech-table tbody tr:first-child { padding-top: 0; }
+  .tech-table tbody th,
+  .tech-table tbody td:nth-child(2) { grid-column: 1 / -1; }
+  .tech-table td[data-label="Stages"]::before,
+  .tech-table td[data-label="Status"]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 6px;
+    font: 500 .875rem/1.4 var(--font-text);
+    color: var(--v-soft);
+  }
+  .tech-fig { max-width: 420px; }
 }
-.ai-split { display: grid; gap: var(--s4); }
-@media (min-width: 640px) { .ai-split { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.ai-split h3 { margin-bottom: var(--s1); }
-.ai-list { border-bottom: 1px solid var(--line); }
-.ai-list li { padding: 10px 0; border-top: 1px solid var(--line); }
-.ai-note { grid-column: 1 / -1; max-width: 60ch; }
 
-/* ---------- roadmap + point-cloud plate ---------- */
-.roadmap { display: grid; gap: var(--s5); }
-@media (min-width: 960px) {
-  .roadmap { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--s6); align-items: start; }
+/* From 900px: a four-column table. Header labels small, one ink rule under them, rows apart. */
+@media (min-width: 900px) {
+  .tech-table { table-layout: fixed; }
+  .tech-table thead th {
+    padding: 0 var(--s3) 12px 0;
+    border-bottom: 1px solid var(--ink);
+    font: 500 .875rem/1.4 var(--font-text);
+    color: var(--v-soft);
+    vertical-align: bottom;
+  }
+  .tech-table thead th:nth-child(1) { width: 20%; }
+  .tech-table thead th:nth-child(2) { width: 55%; }
+  .tech-table thead th:nth-child(3) { width: 16%; }
+  .tech-table thead th:nth-child(4) { width: 9%; padding-right: 0; }
+  .tech-table tbody th,
+  .tech-table tbody td { padding: 20px var(--s3) 20px 0; }
+  .tech-table tbody td:last-child { padding-right: 0; }
+  .tech-fig { max-width: 300px; }
 }
-.roadmap-intro { margin-top: var(--s3); max-width: 52ch; }
-.roadmap-list { margin-top: var(--s4); border-bottom: 1px solid var(--line); max-width: 52ch; }
-.roadmap-list li {
+
+/* Wide screens: the drawing sits beside the line it explains, inside the same cell. */
+@media (min-width: 1180px) {
+  .tech-gives { grid-template-columns: minmax(0, 1fr) 248px; gap: var(--s3); }
+  .tech-fig { max-width: none; }
+}
+
+/* ---------- where AI is used (the page's one ink band) ---------- */
+.tech-ai { margin-top: clamp(32px, 4vw, 48px); }
+.tech-list { display: grid; gap: 10px; }
+.tech-list li {
   position: relative;
-  padding: 12px 0 12px 24px;
-  border-top: 1px solid var(--line);
+  padding-left: 22px;
+  max-width: 48ch;
 }
-/* Outline ring, the same "planned" marker as the table. */
-.roadmap-list li::before {
+/* A small station ring, the same mark as the step line. */
+.tech-list li::before {
   content: "";
   position: absolute;
   left: 0;
-  top: calc(12px + .5em);
-  width: 10px;
-  height: 10px;
-  border: 1.5px solid var(--mark);
+  top: .5em;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--v-survey);
   border-radius: 50%;
 }
-.roadmap .plate { max-width: 720px; }
+.tech-ai__note {
+  margin-top: clamp(28px, 3vw, 40px);
+  max-width: 62ch;
+  color: var(--v-soft);
+}
 
+/* ---------- why better information matters ---------- */
+.tech-why { margin-top: var(--s2); max-width: 22ch; }
+
+/* ---------- planned, not yet in use ---------- */
+.tech-next .v-plan { margin-top: 2px; }

@@ -1,33 +1,40 @@
-/* Home (v3): research/v3-storyboard.md. Tokens from style.css only.
+/* Home (v3, P1 "website mode", owner approved 2026-11-24). Tokens from style.css only.
    Every rule here is scoped to Home's own h- classes, so inner pages keep their look.
-   Rhythm: cement hero → white bento → ink stages → white method → rust documents → cement close → ink footer.
-   Motion: only transform, opacity and stroke-dashoffset. The default (no JS, no support, reduced motion)
-   is always the final, complete state; motion is added inside @supports and prefers-reduced-motion. */
+   Ground: cement throughout, one ink band ("How a project runs"), then the ink footer. White only as
+   contained panels on cement; rust only for buttons, small marks and rules.
+   Heading ladder: H1 48-56px, section H2 32-36px, item H3 22-24px, body 17px.
+   Motion: the hero drawing draws in once on load (main.js), plus hover and focus feedback. Nothing
+   moves because the page scrolled. Without JS and under reduced motion the page is complete. */
 
-/* The survey line replaces the scroll progress bar under the header on Home. */
-.page-home .site-header::after { content: none; }
+.h-main { position: relative; }
 
-.h-main { position: relative; z-index: 0; }
-.h-main > section { position: relative; }
-.h-main > section > .wrap { position: relative; z-index: 2; }
-
-/* Teal is for drawings and the survey line only; the illustrator marks those strokes .ink-survey. */
+/* Teal is for drawings only; the illustrator marks those strokes .ink-survey. */
 .h-main .ink-survey { stroke: var(--survey); }
-.h-main .ink-mark { stroke: var(--mark); }
-.h-main .fill-mark { fill: var(--mark); }
 .h-main .fill-survey { fill: var(--survey); }
 .h-main .bm-mark { fill: var(--action); }
-.h-screen .fill-survey { fill: var(--survey-night); }
-.h-screen .bm-mark { fill: var(--mark); }
 
-/* Shared section heading on Home: bigger than the inner-page H2, no rule above, no number. */
+/* ---------- shared ---------- */
+.h-sec { padding-block: var(--section); }
+/* Neighbouring sections on the one cement ground: a shorter gap, so they read as one page. */
+.h-sec:not(.h-how) + .h-sec:not(.h-how) { padding-top: calc(var(--section) * .5); }
+.h-head { display: grid; gap: 10px; margin-bottom: clamp(24px, 3vw, 36px); }
+.h-head > p { max-width: 60ch; color: var(--slate); }
+/* Section H2: 28px on phones, 32-36px on desktop. */
 .h-title {
-  font-size: clamp(2rem, 3.7vw, 3.125rem);
-  line-height: 1.02;
-  letter-spacing: -.018em;
-  max-width: 20ch;
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -.012em;
+  max-width: 40ch;
 }
-
+/* Item H3: 20px on phones, 22-24px on desktop. */
+.h-group__name,
+.h-stages h3,
+.h-doclist h3 {
+  font: 600 clamp(1.25rem, 1.1rem + .45vw, 1.5rem)/1.2 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.008em;
+  text-wrap: balance;
+}
 .h-link {
   display: inline-flex;
   align-items: center;
@@ -37,66 +44,31 @@
 }
 .h-link .arrow { transition: transform var(--t-fast) var(--ease-out); }
 .h-link:hover .arrow { transform: translateX(3px); }
-
-/* ---------- the survey line ---------- */
-.h-rail {
-  position: absolute;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
-}
-.h-rail__path {
-  /* Without JS: a straight guide on the left lane. main.js writes real coordinates and drops this. */
-  transform: translateX(max(6px, calc((100vw - var(--wrap)) / 2 + var(--gutter) - 28px)));
-  fill: none;
-  stroke: var(--survey);
-  stroke-width: 1.5;
-  stroke-linejoin: miter;
-}
-.h-rail.is-routed .h-rail__path { transform: none; }
-.h-rail.is-inked .h-rail__path { stroke: url(#h-rail-ink); }
-.h-rail__stop { stop-color: var(--survey); }
-.h-rail__stop--night { stop-color: var(--survey-night); }
-.h-rail__stop--rust { stop-color: var(--on-night); }
-.h-rail__tick { fill: var(--raised); stroke: var(--survey); stroke-width: 1.5; }
-.h-rail__tick--ground { fill: var(--ground); }
-.h-rail__tick--night { fill: var(--night); stroke: var(--survey-night); }
-.h-rail__tick--rust { fill: var(--action); stroke: var(--on-night); }
-
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .h-rail__path {
-      stroke-dasharray: 1 1;
-      animation: h-draw linear both;
-      animation-timeline: scroll(root block);
-      animation-range: var(--rail-a, 0%) var(--rail-b, 100%);
-    }
-  }
-}
-@keyframes h-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
+.h-plan {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid var(--survey);
+  border-radius: var(--radius);
+  color: var(--survey);
+  font: 500 .8125rem/1.5 var(--font-text);
+  white-space: nowrap;
 }
 
-/* ---------- 1. hero (cement) ---------- */
+/* ---------- 1. hero (cement, compact) ---------- */
 .h-hero {
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   overflow: hidden;
   background: var(--ground);
-  padding-block: clamp(32px, 5vw, 64px) clamp(28px, 4vw, 56px);
+  padding-block: clamp(24px, 4vw, 48px) clamp(20px, 3vw, 36px);
 }
 .h-hero__copy { position: relative; z-index: 2; }
 .h-eyebrow {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: var(--s3);
+  margin-bottom: var(--s2);
   font: 500 .9375rem/1.4 var(--font-text);
   color: var(--slate);
 }
@@ -105,16 +77,17 @@
   flex: none;
   width: 10px;
   height: 9px;
-  background: var(--mark);
+  background: var(--brand-green);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
 }
+/* H1: 36px on phones, 56px at 1440. */
 .h-hero .display {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: .98;
-  max-width: 13.5ch;
+  font-size: clamp(2.25rem, 1.25rem + 2.8vw, 3.5rem);
+  line-height: 1.02;
+  max-width: 21ch;
 }
-.h-hero .lead { margin-top: var(--s3); max-width: 36rem; }
-.h-hero .actions { margin-top: var(--s4); gap: 12px 28px; }
+.h-hero .lead { margin-top: var(--s2); max-width: 36rem; }
+.h-hero .actions { margin-top: var(--s3); gap: 12px 28px; }
 .h-cue {
   display: inline-flex;
   align-items: center;
@@ -126,513 +99,73 @@
 .h-cue .arrow { transition: transform var(--t-fast) var(--ease-out); }
 .h-cue:hover .arrow { transform: translateY(3px); }
 
-.h-hero__art {
-  position: relative;
-  order: 2;
-  margin: var(--s3) 0 0;
-}
+.h-hero__art { position: relative; order: 2; margin: var(--s2) 0 0; }
 .h-contours {
   display: block;
   width: 100%;
-  height: clamp(112px, 30vw, 260px);
+  height: clamp(96px, 26vw, 220px);
   color: var(--ink);
 }
 .h-contours .d-thin { stroke: var(--survey); stroke-opacity: .7; }
 .h-contours text { font-size: 15px; }
 .h-contours .halo { stroke: var(--ground); }
 .h-scan__grid { stroke: var(--survey); stroke-opacity: .16; }
-.h-scan__beam { stroke: var(--survey); stroke-width: 1.5; opacity: 0; }
 .h-hero__cap {
   padding: 6px var(--gutter) 0;
   font: 400 .8125rem/1.4 var(--font-text);
   color: var(--slate);
 }
-
 @media (min-width: 960px) {
   .h-hero {
-    position: relative;
-    min-height: calc(74svh - var(--header-h));
-    padding-block: 32px;
+    justify-content: center;
+    min-height: clamp(360px, 44svh, 420px);
   }
   /* The copy column lets pointer events through to the drawing's notes beside it. */
   .h-hero__copy { pointer-events: none; }
   .h-hero__copy > * { pointer-events: auto; }
-  .h-hero__copy > .lead { max-width: min(36rem, 48%); }
+  .h-hero__copy > .lead { max-width: min(38rem, 50%); }
   .h-hero__art {
     position: absolute;
     z-index: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    width: min(58vw, 980px);
-    height: auto;
+    width: min(52vw, 880px);
     margin: 0;
   }
-  .h-contours { height: 100%; }
+  .h-contours {
+    height: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%);
+    mask-image: linear-gradient(to right, transparent 0, #000 30%);
+  }
+  .h-contours text { font-size: 9px; }
+  /* The caption ends on the content edge (the wrap), not the screen edge. */
   .h-hero__cap {
     position: absolute;
-    right: var(--gutter);
-    bottom: 16px;
+    right: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter)));
+    bottom: 10px;
     max-width: 21rem;
     padding: 4px 8px;
     background: var(--ground);
     text-align: right;
   }
-  .h-contours {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%);
-    mask-image: linear-gradient(to right, transparent 0, #000 30%);
-  }
-  .h-contours text { font-size: 8px; }
 }
 @media (min-width: 1280px) {
   .h-contours text { font-size: 7.5px; }
 }
 
-/* Entrance: the text never waits. Copy rises 14px at full opacity; the drawing draws (main.js),
-   then one scan line crosses it and leaves the model grid behind. Nothing loops. */
-@media (prefers-reduced-motion: no-preference) {
-  .h-eyebrow,
-  .h-hero .lead,
-  .h-hero .actions { animation: h-rise var(--t-base) var(--ease-out) both; }
-  .h-hero .lead { animation-delay: var(--stagger); }
-  .h-hero .actions { animation-delay: calc(2 * var(--stagger)); }
-}
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  .h-scan__wipe {
-    transform-box: fill-box;
-    transform-origin: 0 0;
-    animation: h-wipe 720ms var(--ease-std) 1050ms both;
-  }
-  .h-scan__beam { animation: h-beam 720ms var(--ease-std) 1050ms both; }
-}
-@keyframes h-rise { from { transform: translateY(var(--rise)); } }
-@keyframes h-wipe { from { transform: scaleX(0); } }
-@keyframes h-beam {
-  0% { transform: translateX(0); opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateX(480px); opacity: 0; }
-}
-
-/* ---------- 2. what we build (white bento) ---------- */
-.h-build {
+/* ---------- 2. PAT Infratech today: a white panel of checkable facts under the hero ---------- */
+.h-today { padding-block: 0; }
+.h-today__panel {
+  display: grid;
+  gap: 12px var(--s4);
+  padding: clamp(18px, 2vw, 24px) clamp(18px, 2.4vw, 28px);
   background: var(--raised);
-  padding-block: clamp(32px, 3vw, 40px) var(--section);
-}
-.h-build .h-title { max-width: 30ch; margin-bottom: clamp(20px, 2vw, 28px); }
-.h-bento { display: grid; gap: 16px; }
-.h-tile { min-width: 0; }
-.h-tile a {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: clamp(16px, 2vw, 28px);
-  background: var(--ground);
-  border-radius: var(--radius);
-  color: var(--ink);
-  text-decoration: none;
-  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
-}
-.h-tile__art {
-  display: block;
-  flex: 1 1 auto;
-  width: 100%;
-  height: auto;
-  max-height: 240px;
-  min-height: 0;
-  color: var(--ink);
-}
-.h-tile__name {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s2);
-  padding-top: var(--s2);
-  font: 600 clamp(1.375rem, 1.1rem + .9vw, 1.875rem)/1.08 var(--font-display);
-  font-stretch: 87.5%;
-  letter-spacing: -.01em;
-  text-wrap: balance;
-}
-.h-tile__name .arrow { width: 20px; height: 20px; color: var(--action); transition: transform var(--t-fast) var(--ease-out); }
-@media (hover: hover) and (pointer: fine) {
-  .h-tile a:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 100vmax rgb(20 23 26 / .035); }
-  .h-tile a:hover .arrow { transform: translateX(3px); }
-}
-@media (min-width: 768px) {
-  .h-bento {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: repeat(2, clamp(250px, 24vw, 330px));
-  }
-  .h-tile--buildings { grid-row: 1 / span 2; }
-  .h-tile--datacentres { grid-column: 2 / span 2; }
-  .h-tile__art { flex: 1 1 0; height: 100%; max-height: none; }
-}
-.h-build__foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--s1) var(--s4);
-  margin-top: var(--s3);
-}
-.h-build__foot p { color: var(--slate); }
-
-/* Tiles rise 14px, one 70ms-equivalent step apart, scrubbed by the reader's own scroll (desktop). */
-@supports (animation-timeline: view()) {
-  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-    .h-tile {
-      animation: h-rise linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 55%;
-    }
-    .h-tile--datacentres { animation-range: entry 4% entry 59%; }
-    .h-tile--roads { animation-range: entry 8% entry 63%; }
-    .h-tile--underground { animation-range: entry 12% entry 67%; }
-  }
-}
-
-/* ---------- 3. how a project runs (ink) ---------- */
-.h-how {
-  background: var(--night);
-  color: var(--on-night);
-  padding-block: var(--section);
-}
-.h-how :focus-visible { outline-color: var(--on-night); }
-.h-how ::selection { background: var(--on-night); color: var(--ink); }
-.h-how .ink-survey { stroke: var(--survey-night); }
-.h-how__head { display: grid; gap: var(--s2); margin-bottom: clamp(32px, 4vw, 56px); }
-.h-how__head p { max-width: 52ch; color: rgb(244 240 232 / .8); }
-
-/* Stepper: phones, and every width without JS. All five stages are visible. */
-.h-panel {
-  position: relative;
-  display: grid;
-  gap: var(--s3);
-  padding: 0 0 var(--s5) var(--s4);
-  border-left: 1px solid rgb(244 240 232 / .28);
-}
-.h-panel:last-child { padding-bottom: 0; border-left-color: transparent; }
-.h-panel::before {
-  content: "";
-  position: absolute;
-  left: -6px;
-  top: 6px;
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid var(--survey-night);
-  border-radius: 50%;
-  background: var(--night);
-}
-.h-panel__text { display: grid; gap: 12px; align-content: start; }
-.h-panel h3 {
-  font: 600 clamp(1.625rem, 1.2rem + 1.4vw, 2.375rem)/1.04 var(--font-display);
-  font-stretch: 87.5%;
-  letter-spacing: -.012em;
-}
-.h-panel p { max-width: 40ch; color: rgb(244 240 232 / .86); }
-.h-receive { margin-top: var(--s1); }
-.h-receive span {
-  display: block;
-  margin-bottom: 2px;
-  font: 500 .875rem/1.4 var(--font-text);
-  color: var(--survey-night);
-}
-.h-tag {
-  justify-self: start;
-  padding: 3px 10px;
-  border: 1px solid rgb(244 240 232 / .45);
-  border-radius: var(--radius);
-  font: 500 .875rem/1.4 var(--font-text);
-}
-.h-next {
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  margin-top: var(--s1);
-  padding: 0;
-  background: none;
-  border: 0;
-  color: var(--on-night);
-  font: 500 1rem/1.3 var(--font-text);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: .22em;
-  cursor: pointer;
-}
-.h-next .arrow { transition: transform var(--t-fast) var(--ease-out); }
-.h-next:hover { text-decoration-thickness: 2px; }
-.h-next:hover .arrow { transform: translateX(3px); }
-.h-panel__art {
-  display: block;
-  width: 100%;
-  max-width: 640px;
-  height: auto;
-  color: var(--on-night);
-  background: rgb(244 240 232 / .04);
-  border: 1px solid rgb(244 240 232 / .14);
   border-radius: var(--radius);
 }
-@media (max-width: 959.98px) {
-  .h-panel { padding-left: 0; border-left: 0; }
-  .h-panel::before { left: calc(.5px - var(--gutter)); }
-  .h-panel__text { padding-left: 0; }
-}
-@media (min-width: 900px) {
-  .h-panel {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: var(--s6);
-    align-items: center;
-  }
-}
-
-/* Tabs: from 900px with JS. One line with five stations, one large panel. */
-.h-stations__tabs {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  margin-bottom: clamp(32px, 3.5vw, 48px);
-  view-timeline: --h-tabs block;
-}
-.h-stations__tabs::before,
-.h-stations__tabs::after {
-  content: "";
-  position: absolute;
-  left: 6px;
-  width: 80%;
-  top: 6px;
-  height: 1px;
-  pointer-events: none;
-}
-.h-stations__tabs::before { background: rgb(244 240 232 / .25); }
-.h-stations__tabs::after { background: var(--survey-night); transform-origin: 0 50%; }
-.h-st {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
-  min-height: 48px;
-  padding: 0 8px 6px 0;
-  background: none;
-  border: 0;
-  color: rgb(244 240 232 / .72);
-  font: 500 1.0625rem/1.3 var(--font-text);
-  text-align: left;
-  cursor: pointer;
-  transition: color var(--t-fast) var(--ease-out);
-}
-.h-st:hover { color: var(--on-night); }
-.h-st__dot {
-  position: relative;
-  z-index: 1;
-  width: 13px;
-  height: 13px;
-  border: 1.5px solid currentColor;
-  border-radius: 50%;
-  background: var(--night);
-  transition: transform var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
-}
-.h-st[aria-selected="true"] { color: var(--on-night); }
-.h-st[aria-selected="true"] .h-st__dot { background: var(--mark); border-color: var(--on-night); transform: scale(1.25); }
-.h-stations.is-tabs .h-panel { padding: 0; border: 0; }
-.h-stations.is-tabs .h-panel::before { content: none; }
-.h-stations.is-tabs .h-panel:focus-visible { outline-offset: 8px; }
-@media (prefers-reduced-motion: no-preference) {
-  .h-stations.is-tabs .h-panel:not([hidden]) { animation: h-swap var(--t-base) var(--ease-out); }
-}
-@keyframes h-swap { from { opacity: 0; transform: translateY(6px); } }
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .h-stations__tabs::after {
-      animation: h-line linear both;
-      animation-timeline: --h-tabs;
-      animation-range: entry 40% cover 55%;
-    }
-  }
-}
-@keyframes h-line { from { transform: scaleX(0); } }
-
-/* Invisible bands that tell main.js which state the screen shows (IntersectionObserver fallback). */
-.h-sentinels {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* ---------- 4. the method (white, with the illustrative screen) ---------- */
-.h-tech {
-  background: var(--raised);
-  padding-block: var(--section);
-}
-.h-tech__head { display: grid; gap: var(--s2); margin-bottom: clamp(32px, 4vw, 56px); }
-.h-tech__head p { max-width: 54ch; color: var(--slate); }
-.h-tech__grid { display: grid; gap: var(--s5); }
-@media (min-width: 1040px) {
-  .h-tech__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s6); align-items: start; }
-}
-.h-screen {
-  position: relative;
-  view-timeline: --h-screen block;
-  margin: 0;
-  overflow: hidden;
-  background: var(--night);
-  color: var(--on-night);
-  border-radius: 4px;
-  box-shadow: 0 24px 48px -28px rgb(20 23 26 / .55);
-}
-.h-screen .ink-survey { stroke: var(--survey-night); }
-.h-screen__states { display: grid; }
-.h-state { position: relative; display: grid; gap: 10px; align-content: start; padding: 0 0 14px; min-width: 0; }
-.h-state__label { padding-inline: 16px; }
-.h-state + .h-state { border-top: 1px solid rgb(244 240 232 / .12); }
-.h-state__art { display: block; width: 100%; height: auto; color: var(--on-night); }
-.h-state__label { display: flex; align-items: center; gap: 10px; font: 500 .9375rem/1.4 var(--font-text); }
-.h-state__key { flex: none; width: 10px; height: 10px; background: var(--survey-night); border-radius: 1px; }
-.h-screen__cap {
-  padding: 10px 16px 14px;
-  border-top: 1px solid rgb(244 240 232 / .12);
-  font: 400 .8125rem/1.45 var(--font-text);
-  color: rgb(244 240 232 / .72);
-}
-/* Reduced motion, no scroll timelines and no JS: the three states stacked in one column, each with its
-   label. The shared label (one line that switches) is only used when the states share one frame. */
-.h-screen__now { display: none; }
-/* One frame, three states, switched while the whole screen is in view (contain range). The drawings
-   fade out and in one after the other, never together; the label swaps in one step, never blends. */
-@supports (animation-timeline: view()) {
-  @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-    .h-state { grid-area: 1 / 1; padding-bottom: 0; }
-    .h-state + .h-state { border-top: 0; }
-    .h-state__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-    .h-state { animation: linear both; animation-timeline: --h-screen; animation-range: contain 0% contain 100%; }
-    .h-state--1 { animation-name: h-s1; }
-    .h-state--2 { animation-name: h-s2; }
-    .h-state--3 { animation-name: h-s3; }
-    .h-screen__now { display: grid; }
-    .h-screen__now > span { animation: step-end both; animation-timeline: --h-screen; animation-range: contain 0% contain 100%; }
-    .h-screen__now > span:nth-child(1) { animation-name: h-l1; }
-    .h-screen__now > span:nth-child(2) { animation-name: h-l2; }
-    .h-screen__now > span:nth-child(3) { animation-name: h-l3; }
-  }
-}
-@keyframes h-s1 { 0%, 30% { opacity: 1; } 34%, 100% { opacity: 0; } }
-@keyframes h-s2 { 0%, 34% { opacity: 0; } 38%, 62% { opacity: 1; } 66%, 100% { opacity: 0; } }
-@keyframes h-s3 { 0%, 66% { opacity: 0; } 70%, 100% { opacity: 1; } }
-@keyframes h-l1 { 0% { opacity: 1; } 34%, 100% { opacity: 0; } }
-@keyframes h-l2 { 0% { opacity: 0; } 34% { opacity: 1; } 66%, 100% { opacity: 0; } }
-@keyframes h-l3 { 0% { opacity: 0; } 66%, 100% { opacity: 1; } }
-.h-screen__now {
-  align-items: center;
-  padding: 0 16px 14px;
-  font: 500 .9375rem/1.4 var(--font-text);
-}
-.h-screen__now > span { grid-area: 1 / 1; display: flex; align-items: center; gap: 10px; }
-/* Fallback without scroll timelines: main.js sets data-state from the screen's own thirds; the change
-   is a short time-based swap, so a resting scroll never shows two states. */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  .h-screen.is-io .h-state { grid-area: 1 / 1; padding-bottom: 0; border-top: 0; opacity: 0; transition: opacity var(--t-fast) linear; }
-  .h-screen.is-io .h-state__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .h-screen.is-io .h-screen__now { display: grid; }
-  .h-screen.is-io .h-screen__now > span { visibility: hidden; }
-  .h-screen.is-io[data-state="1"] .h-state--1,
-  .h-screen.is-io[data-state="2"] .h-state--2,
-  .h-screen.is-io[data-state="3"] .h-state--3 { opacity: 1; transition-delay: var(--t-fast); }
-  .h-screen.is-io[data-state="1"] .h-screen__now > span:nth-child(1),
-  .h-screen.is-io[data-state="2"] .h-screen__now > span:nth-child(2),
-  .h-screen.is-io[data-state="3"] .h-screen__now > span:nth-child(3) { visibility: visible; }
-}
-
-.h-methods__list { display: grid; gap: 20px; }
-.h-methods__list li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 2px var(--s2);
-  align-items: baseline;
-}
-.h-methods__name { font-weight: 500; font-size: 1.0625rem; }
-.h-methods__desc { grid-column: 1; color: var(--slate); font-size: .9375rem; line-height: 1.5; }
-.h-plan {
-  grid-column: 2;
-  grid-row: 1;
-  padding: 1px 8px;
-  border: 1px solid var(--survey);
-  border-radius: var(--radius);
-  color: var(--survey);
-  font: 500 .8125rem/1.5 var(--font-text);
-}
-.h-aim { margin: var(--s5) 0 var(--s2); padding-left: var(--s3); border-left: 2px solid var(--action); }
-.h-aim blockquote { margin: 6px 0 0; }
-.h-aim blockquote p {
-  font: 600 clamp(1.25rem, 1rem + .7vw, 1.5rem)/1.22 var(--font-display);
-  font-stretch: 87.5%;
-  letter-spacing: -.005em;
-  text-wrap: balance;
-}
-
-/* ---------- 5. the written commitment (rust slab) ---------- */
-.h-docs {
-  overflow: hidden;
-  background: var(--action);
-  color: #FFFFFF;
-  padding-block: var(--section);
-}
-.h-docs :focus-visible { outline-color: #FFFFFF; }
-.h-docs ::selection { background: #FFFFFF; color: var(--action); }
-.h-docs__grid { display: grid; gap: var(--s5); }
-@media (min-width: 960px) {
-  .h-docs__grid { grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: var(--s6); align-items: center; }
-}
-.h-huge {
-  font-size: clamp(2.75rem, 6.2vw, 5.75rem);
-  line-height: .94;
-  letter-spacing: -.026em;
-  max-width: 11ch;
-}
-.h-docs__line { margin-top: var(--s3); font-size: clamp(1.125rem, 1rem + .5vw, 1.375rem); }
-.h-doclist {
-  display: grid;
-  gap: var(--s3);
-  margin-top: clamp(32px, 4vw, 48px);
-  max-width: 34rem;
-}
-.h-doclist h3 {
-  font: 600 1.375rem/1.1 var(--font-display);
-  font-stretch: 87.5%;
-}
-.h-doclist p { margin-top: 4px; font-size: .9375rem; line-height: 1.5; }
-
-/* The four papers: the illustrator's stack (sheets.svg), fanned about its bottom centre.
-   Default and reduced motion: fanned. With JS: a squared stack that fans out once on view (400ms). */
-.h-fan { max-width: 560px; justify-self: center; width: 100%; }
-.h-sheets { display: block; width: 100%; height: auto; overflow: visible; color: var(--on-night); }
-/* Opaque rust backing so the back papers never show through (README, drawings-v3). */
-.h-sheets .sheet-paper { fill: var(--action); fill-opacity: 1; }
-.h-sheets .sheet { transform-box: view-box; transform-origin: 240px 400px; }
-.h-sheets .sheet[data-index="0"] { transform: translate(20px, 0) rotate(6deg); }
-.h-sheets .sheet[data-index="1"] { transform: translate(-14px, 6px) rotate(-7deg); }
-.h-sheets .sheet[data-index="2"] { transform: translate(-28px, 12px) rotate(-14deg); }
-.h-sheets .sheet[data-index="3"] { transform: translate(-42px, 18px) rotate(-21deg); }
-@media (prefers-reduced-motion: no-preference) {
-  .h-sheets .sheet { transition: transform var(--t-slow) var(--ease-out); }
-  .h-sheets .sheet[data-index="1"] { transition-delay: 35ms; }
-  .h-sheets .sheet[data-index="2"] { transition-delay: 70ms; }
-  .h-sheets .sheet[data-index="3"] { transition-delay: 105ms; }
-  html.js .h-fan[data-fan]:not(.is-on) .sheet { transform: none; }
-}
-
-/* "PAT Infratech today": one unruled strip of facts. */
-.h-today {
-  display: grid;
-  gap: var(--s2) var(--s5);
-  margin-top: clamp(56px, 7vw, 104px);
-}
-.h-today__title { font: 500 1rem/1.4 var(--font-text); }
-.h-today__rows { display: grid; gap: 10px; }
-.h-today__rows li { position: relative; padding-left: 18px; font-size: 1rem; line-height: 1.5; }
+.h-today__title { font: 500 1rem/1.4 var(--font-text); letter-spacing: 0; max-width: none; }
+.h-today__rows { display: grid; gap: 8px; }
+.h-today__rows li { position: relative; padding-left: 18px; font-size: .9375rem; line-height: 1.5; }
 .h-today__rows li::before {
   content: "";
   position: absolute;
@@ -641,55 +174,197 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: var(--brand-green);
 }
-.h-today__stamp { font-size: .875rem; }
+.h-today__stamp { font-size: .875rem; color: var(--slate); }
+.h-today__stamp a { display: flex; align-items: center; width: fit-content; min-height: 44px; font-weight: 500; }
 @media (min-width: 1040px) {
-  .h-today { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); }
-  .h-today__title { grid-row: 1 / span 2; }
-  .h-today__rows { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s4); }
+  .h-today__panel { grid-template-columns: minmax(0, 2fr) minmax(0, 10fr); align-items: start; }
+  .h-today__title { grid-column: 1; grid-row: 1; }
+  .h-today__stamp { grid-column: 1; grid-row: 2; }
+  .h-today__rows { grid-column: 2; grid-row: 1 / span 2; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
   .h-today__rows li { padding-left: 0; }
   .h-today__rows li::before { content: none; }
 }
 
-/* ---------- 6. start a project (cement), where the survey line lands ---------- */
-.h-close {
-  background: var(--ground);
-  padding-block: var(--section) clamp(64px, 9vw, 128px);
+/* ---------- 3. what we build: nine named services in two groups ---------- */
+.h-groups { display: grid; gap: var(--s5); }
+.h-group { display: grid; gap: 12px; align-content: start; min-width: 0; }
+/* The group drawing sits on the cement beside its name, like the step marks: no white panel. Its
+   labels would render at 4-5px at this size, so the thumbnails carry none. */
+.h-group__art { margin: 0; }
+.h-group__svg { display: block; width: auto; max-width: 100%; height: clamp(112px, 10.5vw, 152px); color: var(--ink); }
+.h-group__name a { color: var(--ink); text-decoration-thickness: 1px; }
+.h-group__name a:hover { color: var(--action); }
+/* The page's main routes: 44px targets from padding and line height, not bigger type. */
+.h-group__name a,
+.h-svc a,
+.h-methods__name { display: inline-flex; align-items: center; min-height: 44px; }
+.h-svc { display: grid; gap: 0; }
+.h-svc li { display: grid; padding-bottom: 6px; }
+.h-svc a { justify-self: start; font-weight: 500; }
+.h-svc span { color: var(--slate); font-size: .9375rem; line-height: 1.45; }
+@media (min-width: 768px) {
+  .h-groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4) var(--s6); }
 }
-.h-close__grid { display: grid; gap: var(--s5); }
-@media (min-width: 960px) {
-  .h-close__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s6); align-items: end; }
+.h-build__foot { margin-top: var(--s4); color: var(--slate); max-width: 70ch; }
+
+/* ---------- 4. how a project runs (the page's one ink band): all five stages at once ---------- */
+.h-how {
+  background: var(--night);
+  color: var(--on-night);
 }
-.h-close .h-title { font-size: clamp(2.5rem, 5.4vw, 4.5rem); max-width: 14ch; }
-.h-close .lead { margin-top: var(--s3); }
-.h-close .actions { margin-top: var(--s4); gap: 12px 28px; }
-.h-bench { position: relative; }
-.h-bench__art { display: block; width: clamp(160px, 18vw, 240px); height: auto; color: var(--ink); overflow: visible; }
-.h-bench .bm-mark { fill: var(--mark); }
+.h-how :focus-visible { outline-color: var(--on-night); }
+.h-how ::selection { background: var(--on-night); color: var(--ink); }
+.h-how a { color: var(--on-night); }
+.h-how .h-head > p { color: rgb(244 240 232 / .8); }
+/* Phones and tablets: a vertical stepper. From 900px (as the kit's step line): one row with a ring
+   per stage on one line. */
+.h-stages { --ring: 13px; --gap: var(--s4); display: grid; gap: var(--gap); }
+.h-stages > li { position: relative; display: grid; gap: 8px; align-content: start; padding-left: calc(var(--ring) + 20px); min-width: 0; }
+.h-stages > li::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 6px;
+  width: var(--ring);
+  height: var(--ring);
+  border: 1.5px solid var(--survey-night);
+  border-radius: 50%;
+  background: var(--night);
+}
+.h-stages > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--ring) / 2 - .75px);
+  top: calc(6px + var(--ring) / 2);
+  bottom: calc(-1 * var(--gap) - 6px - var(--ring) / 2);
+  width: 1.5px;
+  background: var(--survey-night);
+}
+.h-stages p { max-width: 40ch; color: rgb(244 240 232 / .86); }
+.h-receive { font-size: .9375rem; line-height: 1.5; }
+.h-receive span {
+  display: block;
+  margin-bottom: 2px;
+  font: 500 .875rem/1.4 var(--font-text);
+  color: var(--survey-night);
+}
+.h-tag {
+  justify-self: start;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border: 1px solid rgb(244 240 232 / .45);
+  border-radius: var(--radius);
+  font: 500 .8125rem/1.5 var(--font-text);
+}
+.h-how__more { margin-top: var(--s3); }
+@media (min-width: 900px) {
+  .h-stages { --gap: var(--s3); grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+  .h-stages > li { padding: calc(var(--ring) + 20px) var(--s1) 0 0; }
+  .h-stages > li::before { top: 0; }
+  .h-stages > li:not(:last-child)::after {
+    left: calc(var(--ring) / 2);
+    top: calc(var(--ring) / 2 - .75px);
+    bottom: auto;
+    width: calc(100% + var(--gap));
+    height: 1.5px;
+  }
+}
+
+/* ---------- 5. the method: three small labelled drawings beside the six methods ---------- */
+.h-tech__grid { display: grid; gap: var(--s5); }
+.h-figs { display: grid; gap: var(--s3); }
+.h-fig { margin: 0; min-width: 0; }
+/* At 160-300px wide the drawings' 11-12-unit labels would render at 4-6px: the thumbnails carry
+   none, and the caption names what each one shows. */
+.h-fig__art text { display: none; }
+.h-fig__art {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 8px;
+  background: var(--raised);
+  border-radius: var(--radius);
+  color: var(--ink);
+}
+.h-fig figcaption { margin-top: var(--s1); font-size: .875rem; line-height: 1.45; color: var(--slate); }
+.h-fig__name { display: block; font-weight: 500; color: var(--ink); }
+.h-fig .h-plan { margin-top: 6px; }
+/* Phones: each drawing beside its caption, so the three stay compact. */
+@media (max-width: 599.98px) {
+  .h-fig { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--s2); align-items: start; }
+  .h-fig figcaption { margin-top: 0; }
+}
+@media (min-width: 600px) {
+  .h-figs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); }
+}
+.h-aim { margin: var(--s4) 0 var(--s1); padding-left: var(--s3); border-left: 2px solid var(--action); }
+.h-aim blockquote { margin: 4px 0 0; }
+.h-aim blockquote p {
+  font: 600 clamp(1.25rem, 1.05rem + .6vw, 1.5rem)/1.22 var(--font-display);
+  font-stretch: 87.5%;
+  letter-spacing: -.005em;
+  text-wrap: balance;
+  max-width: 40ch;
+}
+.h-methods__list { display: grid; gap: 4px; margin-bottom: var(--s1); }
+.h-methods__list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px var(--s2);
+  align-items: baseline;
+}
+.h-methods__name { justify-self: start; font-weight: 500; }
+.h-methods__desc { grid-column: 1 / -1; color: var(--slate); font-size: .9375rem; line-height: 1.5; }
+@media (min-width: 1040px) {
+  .h-tech__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--s6); align-items: start; }
+}
+
+/* ---------- 6. the four documents (cement) ---------- */
+.h-doclist { display: grid; gap: var(--s3) var(--s4); }
+.h-doclist li { display: grid; gap: 6px; align-content: start; min-width: 0; }
+/* The small teal mark: a station ring on a short survey line. */
+.h-doclist h3::before {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 11px;
+  margin-bottom: 12px;
+  background:
+    radial-gradient(circle at 5.5px 50%, transparent 3.6px, var(--survey) 3.8px 5.2px, transparent 5.4px),
+    linear-gradient(var(--survey), var(--survey)) 11px 50% / 33px 1.5px no-repeat;
+}
+.h-doclist p { color: var(--slate); max-width: 40ch; }
+@media (min-width: 600px) { .h-doclist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1040px) { .h-doclist { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.h-docs__more { margin-top: var(--s4); max-width: 70ch; }
+
+/* ---------- 7. start a project (cement, compact) ---------- */
+.h-close__grid { display: grid; gap: var(--s4); }
+.h-close .lead { margin-top: var(--s2); }
+.h-close .actions { margin-top: var(--s3); gap: 12px 28px; }
+.h-bench__art { display: block; width: clamp(88px, 9vw, 128px); height: auto; color: var(--ink); overflow: visible; }
+.h-bench__art text { font-size: 17px; }
 .h-bench__line {
-  margin-top: var(--s2);
-  font: 600 clamp(1.375rem, 1.1rem + .9vw, 1.875rem)/1.1 var(--font-display);
+  margin-top: var(--s1);
+  max-width: 16ch;
+  font: 600 1.25rem/1.15 var(--font-display);
   font-stretch: 87.5%;
 }
-/* The benchmark mark drops 8px into place once, when the line lands. */
-@media (prefers-reduced-motion: no-preference) {
-  .h-bench .bm-mark { transform-box: fill-box; transition: transform var(--t-base) var(--ease-out), opacity var(--t-base) var(--ease-out); }
-  html.js .h-bench[data-once]:not(.is-on) .bm-mark { transform: translateY(-8px); opacity: 0; }
+@media (min-width: 960px) {
+  .h-close__grid { grid-template-columns: minmax(0, 9fr) minmax(0, 3fr); gap: var(--s5); align-items: center; }
+  .h-bench { justify-self: end; }
 }
 
 /* ---------- phones ---------- */
 @media (max-width: 767.98px) {
-  .h-tile__art { max-height: 200px; }
-  /* Keep the first screen to the hero plus the top of "Buildings, and the land…". */
   .h-hero { padding-block: 24px 12px; }
-  .h-eyebrow { margin-bottom: var(--s2); }
-  .h-hero .lead { margin-top: var(--s2); }
-  .h-hero .actions { gap: 4px 20px; margin-top: var(--s3); }
-  .h-hero__art { margin-top: var(--s2); }
+  .h-hero .actions { gap: 4px 20px; }
   .h-contours { height: 96px; }
 }
-@media print {
-  .h-rail { display: none; }
-  .h-sheets .sheet { transition: none !important; }
+/* The smallest phones: a shorter strip of contours keeps the hero under one 320x640 screen. */
+@media (max-width: 359.98px) {
+  .h-contours { height: 72px; }
 }

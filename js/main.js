@@ -20,22 +20,6 @@
   const $$ = (sel, scope) => Array.prototype.slice.call((scope || document).querySelectorAll(sel));
   const EASE = "cubic-bezier(.2,.7,.2,1)";
 
-  // Calls fn once when el is at least 30% visible (or fills 30% of the viewport).
-  function whenVisible(el, fn) {
-    if (!("IntersectionObserver" in window)) { fn(); return; }
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        const tall = entry.intersectionRect.height >= window.innerHeight * 0.3;
-        if (entry.intersectionRatio >= 0.3 || tall) {
-          io.disconnect();
-          fn();
-        }
-      });
-    }, { threshold: [0, 0.1, 0.2, 0.3, 0.5] });
-    io.observe(el);
-  }
-
   // ---- Mobile navigation ------------------------------------------------
   function initNav() {
     const toggle = document.getElementById("nav-toggle");
@@ -116,10 +100,10 @@
   }
 
   // ---- Drawings: one stroke draw-in --------------------------------------
-  // <svg data-draw="hero"> draws on load (whole sequence <= 1.2 s).
-  // <svg data-draw> draws once when 30% visible. Skipped under reduced motion.
+  // <svg data-draw="hero"> draws on load (whole sequence <= 1.2 s). Skipped on phones and under
+  // reduced motion. Website mode has no other draw-in: nothing moves because the page scrolled.
   const GEOMETRY = "path, line, polyline, polygon, rect, circle, ellipse";
-  const pendingDrawings = []; // prepared (hidden) but not yet finished
+  const pendingDrawings = []; // prepared (hidden) but not yet finished, for beforeprint
 
   // Strokes are non-scaling, so dash lengths are in screen pixels: path length x screen scale.
   function screenScale(svg) {
@@ -134,7 +118,7 @@
   }
 
   // Annotation points (.note) are not drawn in: they stay put, visible and focusable from the start.
-  // The hero's scan grid (.h-scan) has its own CSS sweep, so it is left out as well.
+  // The hero's faint model grid (.h-scan) is left out as well: it simply shows.
   const notInNote = function (el) { return !(el.closest && el.closest(".note, .h-scan")); };
 
   function prepareDrawing(svg) {
@@ -185,10 +169,10 @@
     if (i !== -1) pendingDrawings.splice(i, 1);
   }
 
-  function playDrawing(parts, hero) {
+  function playDrawing(parts) {
     if (parts.done) return;
-    const spread = hero ? 400 : 520;
-    const dur = hero ? 620 : 760;
+    const spread = 400;
+    const dur = 620;
     const n = parts.strokes.length;
     // Re-measure now: a font swap, rotation or resize since load changes the screen scale.
     const scale = screenScale(parts.svg);
@@ -224,37 +208,25 @@
   }
 
   function initDrawings() {
-    const svgs = $$("svg[data-draw]");
+    const svgs = $$('svg[data-draw="hero"]');
     if (!svgs.length || reduceMotion) return;
+    // v3 inner kit: phones drop the decorative draw-in (the drawing simply shows, complete).
+    const phone = !!(window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches);
     svgs.forEach(function (svg) {
-      const hero = svg.getAttribute("data-draw") === "hero";
-      if (!hero && !("IntersectionObserver" in window)) return; // leave it complete
+      if (phone && svg.closest && svg.closest(".v-hero, .v-row, .v-tile, .v-bench")) return;
       // On a slow load the CSS fallback shows the hero complete at 1.2 s. If this script arrives
       // that late (or close to it), leave the drawing as it is rather than blank it and redraw.
-      if (hero && window.performance && typeof performance.now === "function" && performance.now() > 1000) return;
+      if (window.performance && typeof performance.now === "function" && performance.now() > 1000) return;
       let parts;
       try { parts = prepareDrawing(svg); } catch (e) { return; }
-      if (hero) playDrawing(parts, true);
-      else whenVisible(svg, function () { playDrawing(parts, false); });
+      playDrawing(parts);
     });
   }
 
-  // Printing: show every drawing and matrix marker complete, whatever has scrolled into view.
+  // Printing: show a drawing that is still drawing in complete.
   window.addEventListener("beforeprint", function () {
     pendingDrawings.slice().forEach(finishDrawing);
-    $$(".matrix[data-fill]").forEach(function (m) { m.classList.add("is-filled"); });
   });
-
-  // ---- Technology matrix: markers fill along the rows ---------------------
-  function initMatrix() {
-    $$(".matrix[data-fill]").forEach(function (m) {
-      if (reduceMotion || !("IntersectionObserver" in window)) { m.classList.add("is-filled"); return; }
-      $$(".dot, .ring", m).forEach(function (el, i) {
-        el.style.transitionDelay = Math.min(i * 45, 900) + "ms";
-      });
-      whenVisible(m, function () { m.classList.add("is-filled"); });
-    });
-  }
 
   // ---- Copy buttons ---------------------------------------------------------
   function copyText(text) {
@@ -533,8 +505,8 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        status.textContent = "WhatsApp should open with your brief filled in. Nothing is sent until you press send there. " +
-          "If it did not open, email your brief to " + EMAIL + ".";
+        status.textContent = "WhatsApp should now be open with the brief filled in. Nothing is sent until you press send there. " +
+          "If it did not open, copy the address " + EMAIL + " and write to us directly.";
         return;
       }
 
@@ -562,42 +534,15 @@
       }
       const href = base + encode(body);
       window.location.href = href;
-      status.textContent = "Your email app should open with your brief filled in. Nothing is sent until you press send there. " +
+      status.textContent = "Your email app should now be open with the brief filled in. Nothing is sent until you press send there. " +
         (shortened ? "Your description was long, so paste the rest into the email. " : "") +
-        "If no email app opened, copy the address " + EMAIL + " and send your brief from any email account.";
+        "If it did not open, copy the address " + EMAIL + " and write to us directly.";
     });
-  }
-
-  // ---- Reveal: [data-reveal] blocks rise in once ------------------------------
-  // Blocks already on screen (or above it) are marked .is-in before html.reveal-ready is set, so
-  // they are never hidden. CSS hides the rest only at >=768px without reduced motion.
-  function initReveal() {
-    const els = $$("[data-reveal]");
-    if (!els.length) return;
-    const show = function (el) { el.classList.add("is-in"); };
-    if (reduceMotion || !("IntersectionObserver" in window)) { els.forEach(show); return; }
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    const pending = els.filter(function (el) {
-      const r = el.getBoundingClientRect();
-      if (r.top < vh) { show(el); return false; } // in view or already scrolled past
-      return true;
-    });
-    root.classList.add("reveal-ready");
-    if (!pending.length) return;
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        // Intersecting, or jumped past (an anchor link): show it and stop watching.
-        if (entry.isIntersecting || entry.boundingClientRect.bottom < 0) {
-          show(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0 });
-    pending.forEach(function (el) { io.observe(el); });
   }
 
   // ---- Drawing annotations: one shared note --------------------------------------
-  // <g class="note" tabindex="0" role="button" aria-label="…" data-note="…"> inside a drawing.
+  // <g class="note" aria-label="…" data-note="…"> inside a drawing; tabindex and role="button" are
+  // added here, so without JS the notes are not dead tab stops (their text is in the figcaption).
   // Hover, focus, tap, Enter or Space shows the note; Escape or a tap elsewhere hides it.
   const SVG_NS = "http://www.w3.org/2000/svg";
   const HIT_PX = 22; // on-screen radius of the hit circle: a 44px target
@@ -782,8 +727,8 @@
       bar.addEventListener("focusout", function () { window.setTimeout(update, 0); });
       document.body.appendChild(bar);
 
-      const anchor = document.querySelector(".hero .btn--primary, .h-hero .btn--primary, .page-hero .btn--primary") ||
-        document.querySelector(".hero, .h-hero, .page-hero") ||
+      const anchor = document.querySelector(".hero .btn--primary, .h-hero .btn--primary, .v-hero .btn--primary, .page-hero .btn--primary") ||
+        document.querySelector(".hero, .h-hero, .v-hero, .page-hero") ||
         document.querySelector("main > *");
       if (anchor) {
         new IntersectionObserver(function (entries) {
@@ -821,284 +766,12 @@
     else if (mq.addListener) mq.addListener(onChange);
   }
 
-
-  // ---- Home: the survey line ---------------------------------------------------------
-  // One decorative path in an SVG that covers <main> from first paint (no layout shift when routed).
-  // Default (no JS): a straight guide at the left lane, placed by CSS. Below 960px main.js keeps that
-  // guide. From 960px it is routed as one traverse down the right side: from the hero's benchmark,
-  // down the bento gutter, along the right margin with a spur to the last station, onto the top paper
-  // of the document stack, and down to the closing benchmark. CSS draws it with the scroll; this
-  // only measures on resize (no scroll listener).
-  function initRail() {
-    const svg = document.querySelector(".h-rail");
-    if (!svg) return;
-    const main = svg.parentNode;
-    const path = svg.querySelector(".h-rail__path");
-    const grad = svg.querySelector("linearGradient");
-    const ticks = svg.querySelector(".h-rail__ticks");
-    const NS = "http://www.w3.org/2000/svg";
-    const wide = window.matchMedia ? window.matchMedia("(min-width: 960px)") : { matches: false };
-    const q = function (s) { return main.querySelector(s); };
-    const r = Math.round;
-    const kf = document.createElement("style");
-    document.head.appendChild(kf);
-    let frame = 0;
-
-    function build() {
-      const mb = main.getBoundingClientRect();
-      const W = main.clientWidth;
-      const H = main.offsetHeight;
-      const box = function (el) {
-        const b = el.getBoundingClientRect();
-        return { l: b.left - mb.left, r: b.right - mb.left, t: b.top - mb.top, b: b.bottom - mb.top,
-          x: (b.left + b.right) / 2 - mb.left, y: (b.top + b.bottom) / 2 - mb.top };
-      };
-      const at = function (el, x, y) { // a point in an SVG element's own units, in <main> coordinates
-        const p = new DOMPoint(x, y).matrixTransform(el.getScreenCTM());
-        return { x: p.x - mb.left, y: p.y - mb.top };
-      };
-      // Colour by band: teal on light grounds, light teal on ink, cream on rust.
-      while (grad.firstChild) grad.removeChild(grad.firstChild);
-      const stop = function (y, kind) {
-        const s = document.createElementNS(NS, "stop");
-        s.setAttribute("offset", String(Math.min(1, Math.max(0, y / H))));
-        s.setAttribute("class", "h-rail__stop" + (kind ? " h-rail__stop--" + kind : ""));
-        grad.appendChild(s);
-      };
-      stop(0, "");
-      [[".h-how", "night"], [".h-docs", "rust"]].forEach(function (bd) {
-        const el = q(bd[0]);
-        if (!el) return;
-        const b = box(el);
-        stop(b.t, ""); stop(b.t, bd[1]); stop(b.b, bd[1]); stop(b.b, "");
-      });
-      grad.setAttribute("y2", String(H));
-      while (ticks.firstChild) ticks.removeChild(ticks.firstChild);
-
-      const top = mb.top + window.pageYOffset;
-      const vh = window.innerHeight;
-      const HEAD = 0.72; // the drawn head sits about here on the screen
-      const hero = q(".h-hero .mark");
-      const tiles = $$(".h-tile", main);
-      const paper = q('.h-sheets .sheet[data-index="0"] .sheet-paper');
-      const sheets = q(".h-sheets");
-      const end = q("[data-rail-end]");
-      const head = q("#build-h");
-      let route;
-      let rings = [];
-      if (wide.matches && hero && head && tiles.length > 1 && paper && sheets && end) {
-        // Build the route as H/V runs and remember the length at every corner, so the draw can be
-        // keyed to where each corner sits on the page (horizontal runs then draw in a short step).
-        const d = [];
-        const corners = [];
-        let cx = 0, cy = 0, len = 0;
-        const M = function (x, y) { cx = r(x); cy = r(y); d.push("M" + cx + " " + cy); corners.push([cy, len, 0]); };
-        const V = function (y) { y = r(y); len += Math.abs(y - cy); cy = y; d.push("V" + y); corners.push([cy, len, 0]); };
-        const Hz = function (x) { x = r(x); len += Math.abs(x - cx); cx = x; d.push("H" + x); corners.push([cy, len, 1]); };
-        const ring = function (kind) { rings.push([cx, cy, kind, corners.length - 1]); };
-        const s = box(hero);
-        const ink = document.createRange(); // the heading's text, not its block
-        ink.selectNodeContents(head);
-        const h2 = { r: ink.getBoundingClientRect().right - mb.left };
-        const bento = box(q(".h-bento"));
-        const a = box(tiles[0]);
-        const b = box(tiles[1]);
-        const right = Math.min(W - 12, bento.r + 28);
-        M(s.x, s.b);
-        if (h2.r + 20 > s.x) { V(Math.max(s.b + 8, box(q(".h-hero")).b - 16)); Hz(h2.r + 28); } // pass the heading, never box it
-        // Down the gutter between the tall tile and the wide one, then out along the gap under the wide
-        // tile (inside the grid, never as a rule under it), to the right-hand lane.
-        const c = tiles[2] ? box(tiles[2]) : null;
-        const gapY = c && c.t > b.b ? (b.b + c.t) / 2 : bento.b + 14;
-        V(bento.t - 20); Hz((a.r + b.l) / 2); ring("ground"); V(gapY); Hz(right);
-        const tabs = q(".h-stations__tabs");
-        const dots = $$(".h-st__dot", main);
-        if (tabs && !tabs.hidden && dots.length) {
-          const st = box(dots[dots.length - 1]);
-          V(st.y); ring("night"); Hz(st.r); M(right, st.y);
-        }
-        const t = at(paper, +paper.getAttribute("x") + paper.getAttribute("width") / 2, +paper.getAttribute("y"));
-        V(t.y - 40); Hz(t.x); V(t.y); ring("rust");
-        const foot = at(sheets, 240, 400);
-        const e = box(end);
-        // Before it lands, the benchmark mark sits 8px high (home.css); end the line where it rests.
-        if (end.closest("[data-once]:not(.is-on)") && window.getComputedStyle(end).opacity < 1) e.t += 8;
-        M(foot.x, foot.y + 12); V(foot.y + 36); Hz(right); V(e.t - 36); Hz(e.x); V(e.t);
-        svg.classList.add("is-routed");
-        path.setAttribute("d", d.join(""));
-        let pos = -Infinity;
-        route = corners.map(function (c) {
-          pos = Math.max(pos + (c[2] ? 60 : 0), top + c[0] - vh * HEAD);
-          return [pos, 1 - c[1] / len];
-        });
-        rings = rings.map(function (g) { return g.concat(route[g[3]][0]); });
-      } else {
-        const lane = head ? Math.max(6, box(head).l - 28) : 6;
-        svg.classList.add("is-routed");
-        path.setAttribute("d", "M" + r(lane) + " 0V" + H);
-        route = [[top - vh * HEAD, 1], [top + H - vh * HEAD, 0]];
-      }
-      svg.classList.add("is-inked");
-      // Key the scroll-linked draw to the route: keyframes at each corner's scroll position. Each
-      // station ring appears as the line reaches it.
-      const from = route[0][0];
-      const span = Math.max(1, route[route.length - 1][0] - from);
-      let css = "@keyframes h-route{";
-      route.forEach(function (k) { css += (((k[0] - from) / span) * 100).toFixed(3) + "%{stroke-dashoffset:" + k[1].toFixed(4) + "}"; });
-      css += "}@supports (animation-timeline: scroll()){@media (prefers-reduced-motion: no-preference){";
-      rings.forEach(function (g, i) {
-        const c = document.createElementNS(NS, "circle");
-        c.setAttribute("cx", String(g[0]));
-        c.setAttribute("cy", String(g[1]));
-        c.setAttribute("r", "4.5");
-        c.setAttribute("class", "h-rail__tick h-rail__tick--" + g[2]);
-        ticks.appendChild(c);
-        css += ".h-rail__tick:nth-child(" + (i + 1) + "){animation:h-tick linear both;animation-timeline:scroll(root block);" +
-          "animation-range:" + r(g[4] - 8) + "px " + r(g[4]) + "px}";
-      });
-      kf.textContent = css + "}}@keyframes h-tick{from{opacity:0}to{opacity:1}}";
-      svg.style.setProperty("--rail-a", r(from) + "px");
-      svg.style.setProperty("--rail-b", r(from + span) + "px");
-      if (window.getComputedStyle(path).animationName !== "none") path.style.animationName = "h-route";
-    }
-    function schedule() {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(build);
-    }
-    schedule();
-    if ("ResizeObserver" in window) new ResizeObserver(schedule).observe(main);
-    else window.addEventListener("resize", schedule);
-    window.addEventListener("load", schedule);
-    window.addEventListener("h:layout", schedule); // the document stack has fanned out
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
-  }
-
-  // Calls fn(index) as each of an element's sentinel bands crosses the middle of the screen.
-  function onBands(host, fn) {
-    const bands = host ? $$(".h-sentinels > span", host) : [];
-    if (!bands.length || !("IntersectionObserver" in window)) return;
-    const io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) fn(bands.indexOf(e.target)); });
-    }, { rootMargin: "-50% 0px -49% 0px" });
-    bands.forEach(function (b) { io.observe(b); });
-  }
-
-  // ---- Home: stations (tabs from 900px; below that a stepper with every stage visible) --------
-  // Stages change only when the reader asks: a tab, the arrow keys, or "Next" in the panel.
-  function initStations() {
-    const box = document.querySelector("[data-stations]");
-    if (!box) return;
-    const list = box.querySelector(".h-stations__tabs");
-    const tabs = $$("[data-tab]", box);
-    const panels = tabs.map(function (t) { return document.getElementById(t.getAttribute("aria-controls")); });
-    if (!list || panels.indexOf(null) !== -1) return;
-    const mq = window.matchMedia ? window.matchMedia("(min-width: 900px)") : { matches: false };
-    let current = 0;
-
-    function select(i, focus) {
-      current = i;
-      tabs.forEach(function (t, j) {
-        const on = j === i;
-        t.setAttribute("aria-selected", on ? "true" : "false");
-        t.tabIndex = on ? 0 : -1;
-        panels[j].hidden = !on;
-      });
-      if (focus) tabs[i].focus();
-    }
-    function mode() {
-      const on = !!mq.matches;
-      list.hidden = !on;
-      box.classList.toggle("is-tabs", on);
-      if (on) {
-        list.setAttribute("role", "tablist");
-        list.setAttribute("aria-label", "How a project runs");
-      } else {
-        list.removeAttribute("role");
-        list.removeAttribute("aria-label");
-      }
-      tabs.forEach(function (t, j) {
-        const p = panels[j];
-        if (on) {
-          t.setAttribute("role", "tab");
-          p.setAttribute("role", "tabpanel");
-          p.setAttribute("aria-labelledby", t.id);
-          p.tabIndex = 0;
-        } else {
-          t.removeAttribute("role");
-          t.removeAttribute("aria-selected");
-          p.removeAttribute("role");
-          p.removeAttribute("aria-labelledby");
-          p.removeAttribute("tabindex");
-          p.hidden = false;
-        }
-      });
-      $$("[data-next]", box).forEach(function (n) { n.hidden = !on; });
-      if (on) select(current);
-    }
-    tabs.forEach(function (t, i) {
-      t.addEventListener("click", function () { select(i); });
-      t.addEventListener("keydown", function (e) {
-        const n = tabs.length;
-        let to = -1;
-        if (e.key === "ArrowRight" || e.key === "Right") to = (i + 1) % n;
-        else if (e.key === "ArrowLeft" || e.key === "Left") to = (i - 1 + n) % n;
-        else if (e.key === "Home") to = 0;
-        else if (e.key === "End") to = n - 1;
-        if (to < 0) return;
-        e.preventDefault();
-        select(to, true);
-      });
-    });
-    panels.forEach(function (p, i) {
-      const next = p.querySelector("[data-next]");
-      if (next && tabs[i + 1]) next.addEventListener("click", function () { select(i + 1, true); });
-    });
-    mode();
-    if (mq.addEventListener) mq.addEventListener("change", mode);
-    else if (mq.addListener) mq.addListener(mode);
-  }
-
-  // ---- Home: the screen's three states where scroll timelines are missing -------------------
-  function initScreen() {
-    const screen = document.querySelector("[data-screen]");
-    if (!screen || reduceMotion) return;
-    if (window.CSS && CSS.supports && CSS.supports("animation-timeline: view()")) return; // CSS does it
-    if (!("IntersectionObserver" in window)) return; // the three stay stacked, all visible
-    screen.classList.add("is-io");
-    screen.setAttribute("data-state", "1");
-    onBands(screen, function (i) { screen.setAttribute("data-state", String(i + 1)); });
-  }
-
-  // ---- Home: once-on-view states (the document fan, the benchmark mark) ----------------------
-  function initOnce() {
-    $$("[data-fan], [data-once]").forEach(function (el) {
-      const done = function () {
-        el.classList.add("is-on");
-        // The survey line ends on the top paper and the benchmark: re-measure once they settle.
-        window.setTimeout(function () { window.dispatchEvent(new Event("h:layout")); }, reduceMotion ? 0 : 560);
-      };
-      if (reduceMotion) { done(); return; }
-      whenVisible(el, done);
-    });
-  }
-
-  window.addEventListener("beforeprint", function () {
-    $$("[data-reveal]").forEach(function (el) { el.classList.add("is-in"); });
-    $$("[data-fan], [data-once]").forEach(function (el) { el.classList.add("is-on"); });
-  });
-
   initNav();
   initQuickContact();
   initYear();
-  initReveal();
   initDrawings();
   initNotes();
-  initMatrix();
   initCopy();
   initForm();
   initMobileCta();
-  initStations();
-  initRail();
-  initScreen();
-  initOnce();
 })();
