@@ -51,8 +51,8 @@ After changing css/style.css, js/main.js or anything in assets/
 ----------------------------------------------------------------
 On Vercel, browsers reuse these files for up to an hour and may keep using a cached copy for up to a
 day while they check for a newer one. (Pages themselves are always fresh.)
-Every CSS and JS link carries one version key, currently  ?v=3  (css/style.css?v=3, js/main.js?v=3 and
-each css/<page>.css?v=3). BUMP IT ON EVERY RELEASE: raise the number by one on every CSS and JS link on
+Every CSS and JS link carries one version key, currently  ?v=4  (css/style.css?v=4, js/main.js?v=4 and
+each css/<page>.css?v=4; raised from v=3 for the blue-green colour pass, 2026-11-27). BUMP IT ON EVERY RELEASE: raise the number by one on every CSS and JS link on
 all six pages at once, so all pages share the same key. New HTML with an old key can be styled by stale
 CSS. Never go back to v=1 (the previous v2 site used it). The favicon keeps its own ?v=1; change it
 only if the icon changes.
@@ -88,5 +88,6 @@ project photograph can replace one later: use <img src="assets/your-photo.jpg" a
 width="1200" height="800"> in place of the <svg>, change the caption, and check the layout at phone and
 desktop widths.
 
-Company details that are not yet on the site (CIN, GSTIN, incorporation date, founder's name) have marked
-comment slots in the HTML. Add them only when they are confirmed.
+Company details that are not yet on the site (CIN, GSTIN, incorporation date) have marked comment slots
+in the HTML. Add them only when they are confirmed. The owner asked to keep personal details off the site
+for now.

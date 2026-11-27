@@ -1,6 +1,7 @@
 /* About page only (v3, P1 "website mode"). Built from the v3 inner kit in style.css; tokens only.
-   Ground: cement throughout, with one ink band (the four working rules), then the ink footer.
-   Order: hero -> company particulars (white panel) -> why we started -> our aim (quote) -> rules (ink) -> close. */
+   Ground: cement throughout, one tinted section (company particulars, tint-green, the facts on a
+   white panel), one navy band (the four working rules), then the close and the green footer.
+   Order: hero -> company particulars -> why we started -> our aim (quote) -> rules (navy) -> close. */
 
 /* Why we started: the reason is the larger line; the label sits above it. */
 .about-why { margin-top: var(--s2); max-width: 26ch; }

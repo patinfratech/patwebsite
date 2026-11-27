@@ -1,6 +1,7 @@
 /* Technology page only (v3 P1, "website mode"). Built on the v3 inner kit in style.css; tokens and
    kit custom properties only, no new colours.
-   Ground: cement throughout, with one ink band (where AI is used), then the ink footer.
+   Ground: cement throughout, one tinted section (the six methods, tint-blue), one navy band (where
+   AI is used), then the close and the green footer.
    Order: hero -> six methods (a real <table>) -> AI and the engineer (ink) -> why better information
    matters -> planned, not yet in use -> close. No tabs, no scroll motion, no reveals. */
 
@@ -40,11 +41,12 @@
 .tech-fig { max-width: 340px; }
 .tech-fig figcaption { max-width: 40ch; }
 
-/* Stage words as small chips: white on cement, ink text. */
+/* Stage words as small chips: white on the tint, ink text, a --line border. */
 .tech-stages { display: flex; flex-wrap: wrap; gap: 6px; }
 .tech-stages li {
-  padding: 2px 9px;
+  padding: 1px 8px;
   background: var(--v-panel);
+  border: 1px solid var(--v-line);
   border-radius: var(--radius);
   font: 500 .875rem/1.5 var(--font-text);
   color: var(--v-fg);
@@ -113,7 +115,7 @@
   .tech-fig { max-width: none; }
 }
 
-/* ---------- where AI is used (the page's one ink band) ---------- */
+/* ---------- where AI is used (the page's one navy band) ---------- */
 .tech-ai { margin-top: clamp(32px, 4vw, 48px); }
 .tech-list { display: grid; gap: 10px; }
 .tech-list li {
@@ -129,7 +131,7 @@
   top: .5em;
   width: 9px;
   height: 9px;
-  border: 1.5px solid var(--v-survey);
+  border: 1.5px solid var(--v-mark);
   border-radius: 50%;
 }
 .tech-ai__note {

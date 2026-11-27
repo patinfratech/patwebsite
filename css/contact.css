@@ -1,6 +1,7 @@
 /* Contact page only (v3, P1 "website mode"). Built from the v3 inner kit in style.css; tokens only.
    A utility page: a compact head, then the contact routes and the form side by side in the first screen.
-   Ground: cement throughout, with one ink band (what happens after you send it), then the ink footer.
+   Ground: cement throughout, one tinted section (what helps us quote, tint-green), one navy band
+   (what happens after you send it), then the common questions and the green footer.
    Order: hero (eyebrow + H1) -> routes + project brief -> what helps us quote -> after you send it (ink)
    -> common questions. No drawing, no statement band, no close block: the page itself is the close. */
 
@@ -73,7 +74,7 @@
 .c-faq__head > p { max-width: 34ch; }
 .c-faq__body { min-width: 0; }
 .c-qa { display: grid; gap: 12px; }
-.c-qa details { background: var(--v-panel); border-radius: var(--radius); }
+.c-qa details { background: var(--v-panel); border: 1px solid var(--v-line); border-radius: var(--radius); }
 .c-qa summary {
   display: flex;
   align-items: center;
@@ -98,13 +99,13 @@
   border: 1px solid var(--line);
   border-radius: 50%;
   background:
-    linear-gradient(var(--v-accent), var(--v-accent)) center / 12px 1.5px no-repeat,
-    linear-gradient(var(--v-accent), var(--v-accent)) center / 1.5px 12px no-repeat;
+    linear-gradient(var(--v-link), var(--v-link)) center / 12px 1.5px no-repeat,
+    linear-gradient(var(--v-link), var(--v-link)) center / 1.5px 12px no-repeat;
   transition: background-size var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out);
 }
 .c-qa details[open] > summary::after { background-size: 12px 1.5px, 1.5px 0; }
 .c-qa summary:hover::after { border-color: var(--v-fg); }
-.c-qa summary:focus-visible { outline-offset: -3px; }
+.c-qa summary:focus-visible { outline-offset: 2px; }
 .c-qa details > div { padding: 0 clamp(18px, 2.2vw, 28px) clamp(20px, 2.2vw, 28px); max-width: 68ch; }
 .c-qa details > div > * + * { margin-top: .75em; }
 
