@@ -1,5 +1,6 @@
 /* services.html only (v3 P1, website mode). Uses the v- kit in style.css; tokens and kit custom
-   properties only, no new colours. Cement throughout, one ink band (contract types). */
+   properties only, no new colours. Cement throughout, one tinted section (contract types,
+   tint-green) and one navy band (how a project runs), then the close and the green footer. */
 
 /* ---------- service rows: a modest drawing beside its service ---------- */
 /* The v2 drawings size their labels with @container plate queries (style.css), so each drawing
@@ -21,7 +22,7 @@
 }
 .svc-rows .v-row__text { gap: 12px; }
 
-/* Typical scope: a short list with a small teal dash, no rules. */
+/* Typical scope: a short list with a small green dash (a list marker), no rules. */
 .svc-scope { display: grid; gap: 2px; margin-top: 2px; }
 .svc-scope li { position: relative; padding-left: 16px; }
 .svc-scope li::before {
@@ -31,7 +32,7 @@
   top: .78em;
   width: 8px;
   height: 1.5px;
-  background: var(--v-survey);
+  background: var(--v-mark);
 }
 
 /* ---------- services without a drawing: white tiles, two across ---------- */
@@ -41,7 +42,7 @@
 .svc-tiles .v-tile__line { color: var(--v-fg); font-size: inherit; line-height: inherit; max-width: 60ch; }
 .svc-tiles .v-tile .v-link { margin-top: auto; }
 
-/* ---------- contract types (the ink band) ---------- */
+/* ---------- contract types (the page's one tinted section, tint-green) ---------- */
 .svc-contracts > li { gap: 10px; }
 .svc-contracts .svc-suits {
   margin-top: 4px;
@@ -50,7 +51,7 @@
   font-weight: 500;
 }
 
-/* ---------- how a project runs ---------- */
+/* ---------- how a project runs (the page's one navy band) ---------- */
 /* Each stage links to where it is explained: a plain underlined link, 44px tall, no arrow. */
 .svc-steps > li { display: grid; align-content: start; justify-items: start; }
 .svc-step-link {

@@ -1,22 +1,21 @@
 /* Home (v3, P1 "website mode", owner approved 2026-11-24). Tokens from style.css only.
    Every rule here is scoped to Home's own h- classes, so inner pages keep their look.
-   Ground: cement throughout, one ink band ("How a project runs"), then the ink footer. White only as
-   contained panels on cement; rust only for buttons, small marks and rules.
+   Ground: cement throughout, one navy band ("How a project runs"), one tint-blue section (the
+   methods), then the green footer. White only as contained panels with a --line border. Colour
+   (2026-11-27): blue for buttons and links, green for the eyebrow, markers, the rule above H2s (from
+   the kit, on .h-title) and the ground in drawings. Headings stay ink. No rust.
    Heading ladder: H1 48-56px, section H2 32-36px, item H3 22-24px, body 17px.
    Motion: the hero drawing draws in once on load (main.js), plus hover and focus feedback. Nothing
    moves because the page scrolled. Without JS and under reduced motion the page is complete. */
 
 .h-main { position: relative; }
 
-/* Teal is for drawings only; the illustrator marks those strokes .ink-survey. */
-.h-main .ink-survey { stroke: var(--survey); }
-.h-main .fill-survey { fill: var(--survey); }
-.h-main .bm-mark { fill: var(--action); }
+/* Drawings take the kit's two-tone rules in style.css (blue structure, green ground). */
 
 /* ---------- shared ---------- */
 .h-sec { padding-block: var(--section); }
 /* Neighbouring sections on the one cement ground: a shorter gap, so they read as one page. */
-.h-sec:not(.h-how) + .h-sec:not(.h-how) { padding-top: calc(var(--section) * .5); }
+.h-sec:not(.h-how, .h-tech) + .h-sec:not(.h-how, .h-tech) { padding-top: calc(var(--section) * .5); }
 .h-head { display: grid; gap: 10px; margin-bottom: clamp(24px, 3vw, 36px); }
 .h-head > p { max-width: 60ch; color: var(--slate); }
 /* Section H2: 28px on phones, 32-36px on desktop. */
@@ -44,12 +43,15 @@
 }
 .h-link .arrow { transition: transform var(--t-fast) var(--ease-out); }
 .h-link:hover .arrow { transform: translateX(3px); }
+/* "Planned": slate text, a dashed slate border and the kit's small clock (style.css). Never green. */
 .h-plan {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 1px 8px;
-  border: 1px solid var(--survey);
+  border: 1px dashed var(--slate);
   border-radius: var(--radius);
-  color: var(--survey);
+  color: var(--slate);
   font: 500 .8125rem/1.5 var(--font-text);
   white-space: nowrap;
 }
@@ -70,7 +72,7 @@
   gap: 10px;
   margin-bottom: var(--s2);
   font: 500 .9375rem/1.4 var(--font-text);
-  color: var(--slate);
+  color: var(--green-text);
 }
 .h-eyebrow::before {
   content: "";
@@ -106,7 +108,9 @@
   height: clamp(96px, 26vw, 220px);
   color: var(--ink);
 }
-.h-contours .d-thin { stroke: var(--survey); stroke-opacity: .7; }
+/* The hero is a drawing of the ground: its contours are green, the model scan grid blue. */
+.h-contours .d-main { color: var(--brand-green); }
+.h-contours .d-thin { stroke: var(--brand-green); stroke-opacity: .7; }
 .h-contours text { font-size: 15px; }
 .h-contours .halo { stroke: var(--ground); }
 .h-scan__grid { stroke: var(--survey); stroke-opacity: .16; }
@@ -161,6 +165,7 @@
   gap: 12px var(--s4);
   padding: clamp(18px, 2vw, 24px) clamp(18px, 2.4vw, 28px);
   background: var(--raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 .h-today__title { font: 500 1rem/1.4 var(--font-text); letter-spacing: 0; max-width: none; }
@@ -195,7 +200,7 @@
 .h-group__art { margin: 0; }
 .h-group__svg { display: block; width: auto; max-width: 100%; height: clamp(112px, 10.5vw, 152px); color: var(--ink); }
 .h-group__name a { color: var(--ink); text-decoration-thickness: 1px; }
-.h-group__name a:hover { color: var(--action); }
+.h-group__name a:hover { color: var(--action-hover); }
 /* The page's main routes: 44px targets from padding and line height, not bigger type. */
 .h-group__name a,
 .h-svc a,
@@ -209,15 +214,19 @@
 }
 .h-build__foot { margin-top: var(--s4); color: var(--slate); max-width: 70ch; }
 
-/* ---------- 4. how a project runs (the page's one ink band): all five stages at once ---------- */
+/* ---------- 4. how a project runs (the page's one navy band): all five stages at once ---------- */
+/* White text, --on-dark-muted secondary text, --on-dark-link underlined links, --on-dark-mark
+   markers, a white focus ring. */
 .h-how {
-  background: var(--night);
-  color: var(--on-night);
+  --v-mark: var(--on-dark-mark);
+  background: var(--band);
+  color: #FFFFFF;
 }
-.h-how :focus-visible { outline-color: var(--on-night); }
-.h-how ::selection { background: var(--on-night); color: var(--ink); }
-.h-how a { color: var(--on-night); }
-.h-how .h-head > p { color: rgb(244 240 232 / .8); }
+.h-how :focus-visible { outline-color: #FFFFFF; }
+.h-how ::selection { background: #FFFFFF; color: var(--band); }
+.h-how a { color: var(--on-dark-link); }
+.h-how a:hover { color: #FFFFFF; }
+.h-how .h-head > p { color: var(--on-dark-muted); }
 /* Phones and tablets: a vertical stepper. From 900px (as the kit's step line): one row with a ring
    per stage on one line. */
 .h-stages { --ring: 13px; --gap: var(--s4); display: grid; gap: var(--gap); }
@@ -230,9 +239,9 @@
   top: 6px;
   width: var(--ring);
   height: var(--ring);
-  border: 1.5px solid var(--survey-night);
+  border: 1.5px solid var(--on-dark-mark);
   border-radius: 50%;
-  background: var(--night);
+  background: var(--band);
 }
 .h-stages > li:not(:last-child)::after {
   content: "";
@@ -241,22 +250,27 @@
   top: calc(6px + var(--ring) / 2);
   bottom: calc(-1 * var(--gap) - 6px - var(--ring) / 2);
   width: 1.5px;
-  background: var(--survey-night);
+  background: var(--on-dark-link);
 }
-.h-stages p { max-width: 40ch; color: rgb(244 240 232 / .86); }
+.h-stages p { max-width: 40ch; color: var(--on-dark-muted); }
 .h-receive { font-size: .9375rem; line-height: 1.5; }
 .h-receive span {
   display: block;
   margin-bottom: 2px;
   font: 500 .875rem/1.4 var(--font-text);
-  color: var(--survey-night);
+  color: var(--on-dark-mark);
 }
+/* "Planned" on the band: muted text, a dashed border and the small clock. Never green. */
 .h-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   justify-self: start;
   margin-top: 2px;
   padding: 1px 8px;
-  border: 1px solid rgb(244 240 232 / .45);
+  border: 1px dashed var(--on-dark-muted);
   border-radius: var(--radius);
+  color: var(--on-dark-muted);
   font: 500 .8125rem/1.5 var(--font-text);
 }
 .h-how__more { margin-top: var(--s3); }
@@ -274,6 +288,8 @@
 }
 
 /* ---------- 5. the method: three small labelled drawings beside the six methods ---------- */
+/* The page's one tinted section (tint-blue); the drawing panels stay white with a --line border. */
+.h-tech { background: var(--tint-blue); }
 .h-tech__grid { display: grid; gap: var(--s5); }
 .h-figs { display: grid; gap: var(--s3); }
 .h-fig { margin: 0; min-width: 0; }
@@ -286,6 +302,7 @@
   height: auto;
   padding: 8px;
   background: var(--raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
   color: var(--ink);
 }
@@ -300,7 +317,7 @@
 @media (min-width: 600px) {
   .h-figs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); }
 }
-.h-aim { margin: var(--s4) 0 var(--s1); padding-left: var(--s3); border-left: 2px solid var(--action); }
+.h-aim { margin: var(--s4) 0 var(--s1); padding-left: var(--s3); border-left: 2px solid var(--brand-green); }
 .h-aim blockquote { margin: 4px 0 0; }
 .h-aim blockquote p {
   font: 600 clamp(1.25rem, 1.05rem + .6vw, 1.5rem)/1.22 var(--font-display);
@@ -325,7 +342,7 @@
 /* ---------- 6. the four documents (cement) ---------- */
 .h-doclist { display: grid; gap: var(--s3) var(--s4); }
 .h-doclist li { display: grid; gap: 6px; align-content: start; min-width: 0; }
-/* The small teal mark: a station ring on a short survey line. */
+/* The small green mark: a station ring on a short survey line. */
 .h-doclist h3::before {
   content: "";
   display: block;
@@ -333,8 +350,8 @@
   height: 11px;
   margin-bottom: 12px;
   background:
-    radial-gradient(circle at 5.5px 50%, transparent 3.6px, var(--survey) 3.8px 5.2px, transparent 5.4px),
-    linear-gradient(var(--survey), var(--survey)) 11px 50% / 33px 1.5px no-repeat;
+    radial-gradient(circle at 5.5px 50%, transparent 3.6px, var(--brand-green) 3.8px 5.2px, transparent 5.4px),
+    linear-gradient(var(--brand-green), var(--brand-green)) 11px 50% / 33px 1.5px no-repeat;
 }
 .h-doclist p { color: var(--slate); max-width: 40ch; }
 @media (min-width: 600px) { .h-doclist { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
